@@ -44,10 +44,12 @@ if not options.useMC :
     process.source.lumisToProcess = LumiList.LumiList(filename = '/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerData/data/golden.json').getVLuminosityBlockRange()
 
 process.electroneff = cms.EDAnalyzer(
-   'TriggerElectronEff',
+   'TriggerMCElectronEff',
    tag = cms.InputTag("electrontool","Tag"),
    probe =  cms.InputTag("electrontool","Probe"),
    etabin = cms.vdouble(-2.5, -2.1, -2, -1.566, -1.444, -0.8 ,0, 0.8 ,1.444, 1.566, 2, 2.1, 2.5),
+    pusrc = cms.InputTag("slimmedAddPileupInfo"),
+   filename = cms.FileInPath("TriggerEfficiency/TriggerEff/test/pileupweight_69200.csv"),
    ptbin = cms.vdouble(10,20,30,40,50,200),
    tagtrigger = cms.VPSet(
        cms.PSet(

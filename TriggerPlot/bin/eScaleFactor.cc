@@ -22,7 +22,7 @@ double ErrorProp(double x1,double m1,double x2,double m2)     //Data MC
 int main()
 {
 
-    TFile* MCFile = new TFile("/wk_cms/sam7k9621/MC_data/electron/electron_MC_eff.root","READ");
+    TFile* MCFile = new TFile("/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerEff/data/MC_data/electron/electron_MC_eff.root","READ");
     TDirectory* MCdir = MCFile->GetDirectory("electroneff");
     TH2D** pass=new TH2D*[2];
     TH2D** total=new TH2D*[2];
@@ -31,7 +31,7 @@ int main()
     MCdir->GetObject("total_ele32",total[1]);
     MCdir->GetObject("pass_ele32" , pass[1]);
 
-    TFile* dataFile = new TFile("/wk_cms/sam7k9621/electron/electron_eff.root","READ");
+    TFile* dataFile = new TFile("/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerEff/data/electron/electron_eff.root","READ");
     TDirectory* datadir = dataFile->GetDirectory("electroneff");
     TEfficiency** dataEff=new TEfficiency*[2];
     datadir->GetObject("total_ele27_clone",dataEff[0]);
@@ -133,7 +133,7 @@ int main()
         
         pt->Draw();
         plt::DrawCMSLabel();
-        plt::DrawLuminosity(36500);
+        plt::DrawLuminosity(35685);
 
 
         TLegend* leg =plt::NewLegend(0.4,0.7,0.8,0.8);

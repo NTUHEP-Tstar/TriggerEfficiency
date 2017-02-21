@@ -110,7 +110,7 @@ int main()
         "scale_mu24_tkmu24",
         "scale_mu27_tkmu27",
         "scale_mu45",
-        "scale_mur50_tkmu50"
+        "scale_mu50_tkmu50"
     };
     
     string desc[] ={"IsoMu22 || IsoTkMu22",
@@ -135,6 +135,8 @@ int main()
     
     };
 
+
+    TFile f("mCompare.root","RECREATE");
 
     for(int i=0; i<5; i++)
     {
@@ -203,7 +205,7 @@ int main()
     
         pad22->cd();
 
-        TH1F* _ratio = new TH1F("_ratio","",binnum[i],pbin[i]);
+        TH1D* _ratio = new TH1D(("pt_"+name[i]).c_str(),name[i].c_str(),binnum[i],pbin[i]);
         
         for(int j=1;j<binnum[i]+1;j++){
             double deff = dPtEff->GetY()[j-1];
@@ -228,6 +230,10 @@ int main()
                 cout<<"seff "<<seff<<endl;
             }
         }
+
+        _ratio->Write();
+
+
         TH1F* h33;
         h33=gPad->DrawFrame(pframe_x_min,0,pframe_x_max,2,"");
         plt::SetAxis(h33);
@@ -245,7 +251,7 @@ int main()
 
         plt::SaveToPDF(c,Form("pteff%d.pdf",i));
 
-
+        
 
 
         /********************************************************************************************/
@@ -298,7 +304,7 @@ int main()
 
         pad2->cd();
 
-        TH1F* ratio = new TH1F("ratio","",14,ebin);
+        TH1D* ratio = new TH1D(("eta_"+name[i]).c_str(),name[i].c_str(),14,ebin);
         
         for(int j=1;j<15;j++){
             double deff = dEtaEff->GetY()[j-1];
@@ -311,6 +317,11 @@ int main()
             ratio->SetBinError(j,serr);
         
         }
+
+
+        ratio->Write();
+
+
         TH1F* h3=gPad->DrawFrame(eframe_x_min,0,eframe_x_max,1.4,"");
         plt::SetAxis(h3);
         h3->GetXaxis()->SetTitle("Eta");
@@ -329,5 +340,11 @@ int main()
         delete _ratio;
         delete ratio;
         delete c1;
+    
+        f.Write();
     }
+
+
+
+    f.Close();
 }

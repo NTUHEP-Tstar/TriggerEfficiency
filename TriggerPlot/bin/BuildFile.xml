@@ -1,13 +1,12 @@
 <use name="ManagerUtils/PlotUtils"/>
 <use name="TriggerEfficiency/TriggerPlot"/>
 <use name="root"/>
-<bin name="DrawEle" file="eff.cc"/>
 <bin name="TriggerPlot" file="TriggerPlot.cc"/>
 <bin name="eTriggerScale" file="eScaleFactor.cc"/>
 <bin name="mTriggerScale" file="mScaleFactor.cc"/>
-<bin name="DrawOfficial" file="Arun.cc"/>
 <bin name="mCompareTrigger" file="mCompare.cc"/>
 <bin name="eCompareTrigger" file="eCompare.cc"/>
 <bin name="mSysErr" file="mSysError.cc"/>
 <bin name="eSysErr" file="eSysError.cc"/>
+<bin name="zMass" file="zMass.cc"/>
 

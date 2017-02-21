@@ -5,7 +5,8 @@
 #define dirname "demo"
 #define text "Muon run B-D"
 #define etapdf "eff_eta_muon.pdf"
-#define lumi 12900
+#define lumi 12933
+#define modif "Change MC dataset"
 /////////////////////////////////
 #define pline_x_min 0
 #define pline_x_max 130
@@ -42,10 +43,10 @@
 #define pleg_y_min 0.2
 #define pleg_y_max 0.3
 
-#define eleg_x_min 0.3
-#define eleg_x_max 0.4
-#define eleg_y_min 0.15
-#define eleg_y_max 0.25
+#define eleg_x_min 0.48
+#define eleg_x_max 0.88
+#define eleg_y_min 0.35
+#define eleg_y_max 0.55
 /////////////////////////////////
 
 #endif

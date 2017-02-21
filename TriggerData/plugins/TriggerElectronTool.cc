@@ -301,17 +301,23 @@ bool TriggerElectronTool::filter(edm::Event& iEvent, const edm::EventSetup& iSet
             return false;
     }
     //to confirm MC truth and their mother is the same z
+
+    if (!zParent(ele))
+        return false;
+
     if(useMC)
     {
         if(ele[first].genLepton()== NULL || ele[second].genLepton()== NULL)
             return false;
 
-        if (!zParent(ele))
-            return false;
-
         if(!( GetDirectMother(ele[first].genLepton(),23) == GetDirectMother(ele[second].genLepton(),23) ))
             return false;
     }
+
+    //tag preselection
+    if (!(passtagkin && tid)) return false;
+    //probe preselection
+    if (!(passprobekin && pid)) return false;
 
     //to mark the electron that pass the criteria
     passTrigger(ele[first],names);

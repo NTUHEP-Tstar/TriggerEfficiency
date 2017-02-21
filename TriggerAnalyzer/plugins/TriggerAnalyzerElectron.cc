@@ -10,10 +10,12 @@
 #include "TGraphAsymmErrors.h"
 #include "TH1.h"
 #include "TCanvas.h"
+#include "TLorentzVector.h"
 #include "TFile.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 using namespace std;
+
 
 class hist {
     edm::Service<TFileService> fs;
@@ -84,6 +86,8 @@ public:
     void tefill(double d) {
         eta->tfill(d);
     }
+
+
 private:
     double* pb;
     double* eb;
@@ -108,6 +112,10 @@ private:
 
     // ----------member data ---------------------------
 
+    edm::Service<TFileService> fs;
+    TH1D* zmass1;
+    TH1D* zmass2;
+
     vector<Trig*> tri;
     vector<double> etabin;
     vector<edm::ParameterSet> vtri;
@@ -125,8 +133,9 @@ TriggerAnalyzerElectron::TriggerAnalyzerElectron(const edm::ParameterSet& iConfi
     probe ( consumes<vector<pat::Electron>>(iConfig.getParameter<edm::InputTag> ("probe") ) ),  //module
     tag ( consumes<vector<pat::Electron>>  (iConfig.getParameter<edm::InputTag>("tag") ) )
 {
-    //  double ebin[14]= {-2.4,-2.1,-1.6,-1.2,-0.9,-0.3,-0.2,0.2,0.3,0.9,1.2,1.6,2.1,2.4};
 
+    zmass1 = fs->make<TH1D>("ele27","ele27",100,50,130);
+    zmass2 = fs->make<TH1D>("ele32","ele32",100,50,130);
 
     for(int i=0; i<(int)vtri.size(); i++) {      //each pset has a corresponding Trig class
         vector<double> ptbin=vtri[i].getParameter<vector<double>>("ptbin");
@@ -159,48 +168,69 @@ TriggerAnalyzerElectron::analyze(const edm::Event& iEvent, const edm::EventSetup
     iEvent.getByToken( probe, probehandle );
     iEvent.getByToken( tag, taghandle );
 
-    vector<int> totalid;
-    
 
-    for(int k=0; k< (int)taghandle->size(); k++)
-    {
-        pat::Electron el=(*taghandle)[k];
-        for(unsigned i=0; i<vtri.size(); i++) {
-            vector<string> hltname = vtri[i].getParameter<vector<string>>("HLT");
-            double ptcut = vtri[i].getParameter<double>("ptcut");
-            double etacut= vtri[i].getParameter<double>("etacut");
 
-            for(int  j=0; j<(int)hltname.size() ; j++) {
-                if( el.hasUserInt(hltname[j]) && el.pt()>ptcut && fabs(el.superCluster()->eta()) < etacut ) {
-                    totalid.push_back(k);
-                    break;
-                }
-            }
-        }
-    }
 
-    for(int k=0; k< (int)totalid.size(); k++)
-    {
-        pat::Electron el=(*probehandle)[ totalid[k]  ];   //get the corresponding  probed el with tagged el
-        for(unsigned i=0; i<vtri.size(); i++) {                    //how many pset i have
-            vector<string> hltname = vpri[i].getParameter<vector<string>>("HLT");         //each pset has its hlts and its pt cut
-            double hltpt   = vpri[i].getParameter<double>("probePtCut");
-            double hlteta  = vpri[i].getParameter<double>("probeEtaCut");
+    for(unsigned i=0; i<vtri.size(); i++){
+        
+        //set tag cut
+        vector<string> thltname = vtri[i].getParameter<vector<string>>("HLT");
+        double ptcut = vtri[i].getParameter<double>("ptcut");
+        double etacut= vtri[i].getParameter<double>("etacut");
+        //set probe cut
+        vector<string> phltname = vpri[i].getParameter<vector<string>>("HLT");
+        double hltpt   = vpri[i].getParameter<double>("probePtCut");
+        double hlteta  = vpri[i].getParameter<double>("probeEtaCut");
+
+        for(int j=0; j< (int)taghandle->size(); j++){
+            pat::Electron el1=(*taghandle)[j];
+            pat::Electron el2=(*probehandle)[j];
+
+            /////////////////////////zmass window///////////////////////
+            TLorentzVector ele1(el1.px(),el1.py(),el1.pz(),el1.energy());
+            TLorentzVector ele2(el2.px(),el2.py(),el2.pz(),el2.energy());
+            double mass = (ele1+ele2).M();
+            if(mass<70 || mass>110)
+                break;
             
-            if ( fabs( el.superCluster()->eta() ) < hlteta )
-                tri[i]->tpfill(el.pt());
-            if(el.pt()>hltpt)
-                tri[i]->tefill(el.superCluster()->eta());
-
-            for(unsigned j=0; j<hltname.size() ; j++) {
-                if(el.hasUserInt(hltname[j])) {
-                    if ( fabs( el.superCluster()->eta() ) < hlteta )
-                        tri[i]->ppfill(el.pt());
-                    if(el.pt()>hltpt)
-                        tri[i]->pefill(el.superCluster()->eta());
+            //pass tag cut
+            bool passtag = false;
+            for(int  k=0; k<(int)thltname.size() ; k++){
+                if( el1.hasUserInt(thltname[k]) && el1.pt()>ptcut && fabs(el1.superCluster()->eta()) < etacut ){
+                    passtag = true;
                     break;
                 }
             }
+            
+            //pass probe cut
+            if(!passtag)
+                continue;
+
+            //filling in total
+            
+            if ( fabs( el2.superCluster()->eta() ) < hlteta )
+                tri[i]->tpfill(el2.pt());
+            if(el2.pt()>hltpt)
+                tri[i]->tefill(el2.superCluster()->eta());
+
+            //filling in pass
+            for(int  k=0; k<(int)phltname.size() ; k++){
+                 if(el2.hasUserInt(phltname[k])) {
+                     if ( fabs( el2.superCluster()->eta() ) < hlteta )
+                         tri[i]->ppfill(el2.pt());
+                     if(el2.pt()>hltpt)
+                         tri[i]->pefill(el2.superCluster()->eta());
+                     break;
+                 }
+            }
+
+           //store zmass 
+           if(fabs( el2.superCluster()->eta() ) < hlteta && el2.pt()>hltpt){
+               if(i==0)
+                   zmass1->Fill(mass);
+               else
+                   zmass2->Fill(mass);
+           }
         }
     }
 }

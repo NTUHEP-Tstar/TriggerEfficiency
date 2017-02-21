@@ -267,11 +267,12 @@ TriggerMuonTool::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
     bool passprobekin = passKin(muons[second],false);
 
     //to confirm MC truth and their mother is the same z
+    if (!zParent(muons))
+        return false;
+
     if(useMC)
     {
         if(muons[first].genLepton()== NULL || muons[second].genLepton()== NULL)
-            return false;
-        if (!zParent(muons))
             return false;
         if(!( GetDirectMother(muons[first].genLepton(),23) == GetDirectMother(muons[second].genLepton(),23) ))
             return false;

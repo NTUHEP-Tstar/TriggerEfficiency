@@ -11,6 +11,7 @@
 //         Created:  Sun, 04 Dec 2016 05:59:56 GMT
 #include <memory>
 #include <math.h>
+#include "TLorentzVector.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -121,42 +122,54 @@ TriggerMCMuonEff::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     }
 
 
+    for(unsigned i=0; i<tagtrigger.size(); i++){
+        
+        //set tag cut
+        vector<string> thltname = tagtrigger[i].getParameter<vector<string>>("HLT");
+        double ptcut = tagtrigger[i].getParameter<double>("ptcut");
+        double etacut= tagtrigger[i].getParameter<double>("etacut");
+        //set probe cut
+        vector<string> phltname = protrigger[i].getParameter<vector<string>>("HLT");
 
+        for(int j=0; j< (int)taghandle->size(); j++){
+            pat::Muon mu1=(*taghandle)[j];
+            pat::Muon mu2=(*probehandle)[j];
 
-    vector<int> totalid;
-
-    for(int k=0;k< (int)taghandle->size();k++)
-    {
-        pat::Muon muon=(*taghandle)[k];
-        for(unsigned i=0;i<tagtrigger.size();i++){
-            vector<string> hltname = tagtrigger[i].getParameter<vector<string>>("HLT");
-            double ptcut = tagtrigger[i].getParameter<double>("ptcut");
-            double etacut= tagtrigger[i].getParameter<double>("etacut");
-
-            for(int  j=0; j<(int)hltname.size() ;j++){
-                if( muon.hasUserInt(hltname[j]) && muon.pt()>ptcut && fabs(muon.eta()) < etacut ){
-                    totalid.push_back(k);
+            /////////////////////////zmass window///////////////////////
+            TLorentzVector muon1(mu1.px(),mu1.py(),mu1.pz(),mu1.energy());
+            TLorentzVector muon2(mu2.px(),mu2.py(),mu2.pz(),mu2.energy());
+            double mass = (muon1+muon2).M();
+            if(mass<60 || mass>120)
+                break;
+            
+            //pass tag cut
+            bool passtag = false;
+            for(int  k=0; k<(int)thltname.size() ; k++){
+                if( mu1.hasUserInt(thltname[k]) && mu1.pt()>ptcut && fabs(mu1.eta()) < etacut ){
+                    passtag = true;
                     break;
                 }
             }
-        }
-    }
-    
-    for(int k=0;k< (int)totalid.size();k++)
-    {
-        pat::Muon muon=(*probehandle)[ totalid[k]  ];
-        for(unsigned i=0;i<protrigger.size();i++){
-            vector<string> hltname = protrigger[i].getParameter<vector<string>>("HLT");
-            total[i]->Fill(muon.eta(),muon.pt(),pileupweight);
-            for(unsigned j=0; j<hltname.size() ;j++){
-                if(muon.hasUserInt(hltname[j])){
-                    pass[i]->Fill(muon.eta(),muon.pt(),pileupweight);
-                    break;
-                }
+            
+            //pass probe cut
+            if(!passtag)
+                continue;
+
+            //filling in total
+
+            total[i]->Fill(mu2.eta(),mu2.pt(),pileupweight);
+
+            //filling in pass
+            for(int  k=0; k<(int)phltname.size() ; k++){
+                 if(mu2.hasUserInt(phltname[k])) {
+                     pass[i]->Fill(mu2.eta(),mu2.pt(),pileupweight);
+                     break;
+                 }
+            
             }
         }
     }
-    
+
 }
 
 vector<double> TriggerMCMuonEff::readweight(const string& filename){

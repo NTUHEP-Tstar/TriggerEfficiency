@@ -1,3 +1,3 @@
 #Automatically created by SCRAM
 import os
-__path__.append(os.path.dirname(os.path.abspath(__file__).rsplit('/TriggerMCTool/TriggerAnalyzer/',1)[0])+'/cfipython/slc6_amd64_gcc530/TriggerMCTool/TriggerAnalyzer')
+__path__.append(os.path.dirname(os.path.abspath(__file__).rsplit('/TriggerEfficiency/TriggerAnalyzer/',1)[0])+'/cfipython/slc6_amd64_gcc530/TriggerEfficiency/TriggerAnalyzer')

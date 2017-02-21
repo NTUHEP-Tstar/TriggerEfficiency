@@ -13,6 +13,7 @@
 #include "TFile.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
+#include "TLorentzVector.h"
 using namespace std;
 
 class hist {
@@ -155,46 +156,58 @@ TriggerAnalyzerMuon::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     iEvent.getByToken( probe, probehandle );
     iEvent.getByToken( tag, taghandle );
 
-    vector<int> totalid;
+    for(unsigned i=0; i<vtri.size(); i++){
+        
+        //set tag cut
+        vector<string> thltname = vtri[i].getParameter<vector<string>>("HLT");
+        double ptcut = vtri[i].getParameter<double>("ptcut");
+        double etacut= vtri[i].getParameter<double>("etacut");
+        //set probe cut
+        vector<string> phltname = vpri[i].getParameter<vector<string>>("HLT");
+        double hltpt   = vpri[i].getParameter<double>("probePtCut");
+        double hlteta  = vpri[i].getParameter<double>("probeEtaCut");
 
-    for(int k=0; k< (int)taghandle->size(); k++)
-    {
-        pat::Muon muon=(*taghandle)[k];
-        for(unsigned i=0; i<vtri.size(); i++) {
-            vector<string> hltname = vtri[i].getParameter<vector<string>>("HLT");
-            double ptcut = vtri[i].getParameter<double>("ptcut");
-            double etacut= vtri[i].getParameter<double>("etacut");
+        for(int j=0; j< (int)taghandle->size(); j++){
+            pat::Muon mu1=(*taghandle)[j];
+            pat::Muon mu2=(*probehandle)[j];
 
-            for(int  j=0; j<(int)hltname.size() ; j++) {
-                if( muon.hasUserInt(hltname[j]) && muon.pt()>ptcut && fabs(muon.eta()) < etacut ) {
-                    totalid.push_back(k);
+            /////////////////////////zmass window///////////////////////
+            TLorentzVector muon1(mu1.px(),mu1.py(),mu1.pz(),mu1.energy());
+            TLorentzVector muon2(mu2.px(),mu2.py(),mu2.pz(),mu2.energy());
+            double mass = (muon1+muon2).M();
+            if(mass<60 || mass>120)
+                break;
+            
+            //pass tag cut
+            bool passtag = false;
+            for(int  k=0; k<(int)thltname.size() ; k++){
+                if( mu1.hasUserInt(thltname[k]) && mu1.pt()>ptcut && fabs(mu1.eta()) < etacut ){
+                    passtag = true;
                     break;
                 }
             }
-        }
-    }
+            
+            //pass probe cut
+            if(!passtag)
+                continue;
 
-    for(int k=0; k< (int)totalid.size(); k++)
-    {
-        pat::Muon muon=(*probehandle)[ totalid[k]  ];   //get the corresponding  probed muon with tagged muon
-        for(unsigned i=0; i<vtri.size(); i++) {                    //how many pset i have
-            vector<string> hltname = vpri[i].getParameter<vector<string>>("HLT");         //each pset has its hlts and its pt cut
-            double hltpt   = vpri[i].getParameter<double>("probePtCut");
-            double hlteta  = vpri[i].getParameter<double>("probeEtaCut");
+            //filling in total
+            
+            if ( fabs( mu2.eta() ) < hlteta )
+                tri[i]->tpfill(mu2.pt());
+            if(mu2.pt()>hltpt)
+                tri[i]->tefill(mu2.eta());
 
-            if( fabs(muon.eta()) < hlteta)
-                tri[i]->tpfill(muon.pt());
-            if(muon.pt()>hltpt)
-                tri[i]->tefill(muon.eta());
-
-            for(unsigned j=0; j<hltname.size() ; j++) {
-                if(muon.hasUserInt(hltname[j])) {
-                    if( fabs(muon.eta()) < hlteta)
-                        tri[i]->ppfill(muon.pt());
-                    if(muon.pt()>hltpt)
-                        tri[i]->pefill(muon.eta());
-                    break;
-                }
+            //filling in pass
+            for(int  k=0; k<(int)phltname.size() ; k++){
+                 if(mu2.hasUserInt(phltname[k])) {
+                     if ( fabs( mu2.eta() ) < hlteta )
+                         tri[i]->ppfill(mu2.pt());
+                     if(mu2.pt()>hltpt)
+                         tri[i]->pefill(mu2.eta());
+                     break;
+                
+                 }
             }
         }
     }
