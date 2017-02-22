@@ -1,13 +1,13 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "TriggerEfficiency/TriggerDraw/interface/Common.hpp"
+#include "TriggerEfficiency/TriggerDraw/interface/Readmgr.hpp"
 
 using namespace std;
 namespace pt = boost::property_tree;
 
 
-
+/*
 class Readmgr{
     public:
         Readmgr(string file){
@@ -33,13 +33,13 @@ class Readmgr{
     private:
         pt::ptree root;
 };
-
+*/
 
 
 
 int main(){
 
-    Readmgr cfg("/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw/settings/test.json");
+    dra::Readmgr cfg("/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw/settings/test.json");
     string path = cfg.GetSingleData<string>("path");
     cout<<path<<endl;
     
