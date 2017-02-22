@@ -1,0 +1,10 @@
+<use name="TriggerEfficiency/TriggerDraw"/>
+<use name="boost"/>
+<use name="boost_program_options"/>
+<use name="root"/>
+<use name="roofit"/>
+<use name="DataFormats/FWLite"/>
+
+
+<bin name="TriggerDraw"  file="TriggerDraw.cc"/>
+<bin name="hello"  file="test.cc"/>
