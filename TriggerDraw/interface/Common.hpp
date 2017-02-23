@@ -7,7 +7,14 @@
 #include <vector>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include "TAttMarker.h"
+#include "Rtypes.h"
 
+
+
+
+extern Color_t color[10];
+extern Style_t  mstyle[10];
 
 
 namespace dra{
@@ -15,12 +22,15 @@ namespace dra{
 *   Common variable, defined in src/Common.cc
 *******************************************************************************/
 
+
+
+
 /*******************************************************************************
 *   Common function, defined in src/Common.cc
 *******************************************************************************/
 extern void ReadFile(const std::string&  ,boost::property_tree::ptree&);
 
-
+extern double ErrorProp(const double&,const double&, const double&, const double&);
 
 /*******************************************************************************
 *   Common template function, defined in src/Common.cc

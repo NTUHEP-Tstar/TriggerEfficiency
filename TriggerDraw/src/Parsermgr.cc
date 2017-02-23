@@ -5,6 +5,13 @@
 namespace opt = boost::program_options;
 using namespace std;
 
+
+dra::Parsermgr::Parsermgr(){
+    desc.add_options()
+    ( "help,h", "print help options and exit program" )
+  ;
+}
+
 dra::Parsermgr& dra::Parsermgr::AddOptions(const opt::options_description& de){
     desc.add(de);
     return *this;

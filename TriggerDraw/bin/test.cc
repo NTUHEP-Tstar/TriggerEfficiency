@@ -4,15 +4,11 @@
 #include "TriggerEfficiency/TriggerDraw/interface/Readmgr.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/Parsermgr.hpp"
 using namespace std;
-namespace pt = boost::property_tree;
+namespace opt = boost::program_options;
+
 
 
 int main(int argc, char* argv[]){
-
-    opt::options_description command_help("Helper");
-    command_help.add_options()
-    ("help,h"  , "print help options and exit program")
-    ;
 
     opt::options_description command_read_json( "Options for reading json file" );
     command_read_json.add_options()
@@ -26,7 +22,7 @@ int main(int argc, char* argv[]){
     ;
 
     dra::Parsermgr trinamer;
-    trinamer.AddOptions( command_read_json ).AddOptions( command_test_input ).AddOptions( command_help );
+    trinamer.AddOptions( command_read_json ).AddOptions( command_test_input );
     const int run = trinamer.ParseOptions( argc, argv );
     if( run == dra::Parsermgr::HELP_PARSER  ){ return 0; }
     if( run == dra::Parsermgr::FAIL_PARSER ){ return 1; }
@@ -45,7 +41,8 @@ int main(int argc, char* argv[]){
 
     trinamer.SetFileName( {"test","lepton"}  );
     cout<<trinamer.GetFileName("pdf")<<endl;
-/*
+    
+    /*
     if(lepton == "sam7k9621"){
         dra::Readmgr cfg("/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw/settings/test.json");
         string path = cfg.GetSingleData<string>("path");

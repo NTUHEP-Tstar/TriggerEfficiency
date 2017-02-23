@@ -1,6 +1,11 @@
 <use name="TriggerEfficiency/TriggerDraw"/>
+<use name="ManagerUtils/PlotUtils"/>
 <use name="boost"/>
+<use name="root"/>
+<use name="roofit"/>
 <use name="boost_program_options"/>
 <use name="DataFormats/FWLite"/>
 
+
 <bin name="hello"  file="test.cc"/>
+<bin name="TriCom"  file="TriggerCompare.cc"/>

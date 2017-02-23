@@ -15,7 +15,9 @@ namespace dra{
                 HELP_PARSER,
                 PASS_PARSER
             };
-
+            
+            Parsermgr();
+            ~Parsermgr(){}
 
             Parsermgr& AddOptions(const boost::program_options::options_description&);
             int ParseOptions(int argc, char* argv[]);
