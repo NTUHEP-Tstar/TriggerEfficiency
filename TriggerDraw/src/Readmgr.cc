@@ -14,17 +14,3 @@ dra::Readmgr::GetRoot(){
     return root;
 }
 
-
-/*
-template<typename T>
-T dra::Readmgr::GetSingleData(const string& tag){
-    return dra::GetSingle<T>(tag,root);
-}
-
-
-template<typename T>
-vector<T> dra::Readmgr::GetListData(const string& tag){
-    return dra::GetList<T>(tag, root);
-}
-
-*/

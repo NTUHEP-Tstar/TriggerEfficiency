@@ -5,7 +5,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
 #include "TriggerEfficiency/TriggerDraw/interface/Common.hpp"
-
+/*
 namespace opt = boost::program_options;
 using namespace std;
 
@@ -18,12 +18,12 @@ template<typename T>
 vector<T> GetInputList(string op, opt::variables_map vm) {
     return vm[op].as<vector<T>>();
 }
-
+*/
 
 int main( int argc, char* argv[] )
 {
 
-
+/*
     opt::options_description desc( "Allowed options" );
 
     desc.add_options()
@@ -66,8 +66,8 @@ int main( int argc, char* argv[] )
         } catch( ...  ){
         }
     }
-
-    cout<<"pass second try: "<<lepton<<endl;
+*/
+//    cout<<"pass second try: "<<lepton<<endl;
 /*   if(lepton == "electron"){
        for(auto& lep : elsource){
            cout<<lep<<endl;
