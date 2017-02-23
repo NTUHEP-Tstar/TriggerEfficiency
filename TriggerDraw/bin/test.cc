@@ -9,19 +9,24 @@ namespace pt = boost::property_tree;
 
 int main(int argc, char* argv[]){
 
+    opt::options_description command_help("Helper");
+    command_help.add_options()
+    ("help,h"  , "print help options and exit program")
+    ;
+
     opt::options_description command_read_json( "Options for reading json file" );
     command_read_json.add_options()
-    ( "path,p"  , opt::value<string>(), "show which path" )
-    ( "lepton,l", opt::value<string>(), "show which lepton" )
+    ( "path,p"  , "show which path" )
+    ( "lepton,l", opt::value<string>()->required(), "show which lepton" )
     ;
 
     opt::options_description command_test_input("Options for testing input");
     command_test_input.add_options()
-    ( "test,t"  , opt::value<double>(), "show the testing input")
+    ( "test,t"  , opt::value<double>()->required(), "show the testing input")
     ;
 
     dra::Parsermgr trinamer;
-    trinamer.AddOptions( command_read_json ).AddOptions( command_test_input );
+    trinamer.AddOptions( command_read_json ).AddOptions( command_test_input ).AddOptions( command_help );
     const int run = trinamer.ParseOptions( argc, argv );
     if( run == dra::Parsermgr::HELP_PARSER  ){ return 0; }
     if( run == dra::Parsermgr::FAIL_PARSER ){ return 1; }
@@ -36,7 +41,11 @@ int main(int argc, char* argv[]){
     if(trinamer.CheckOption("test")){
         a += trinamer.GetOption<double>("test");
     }
-    
+   
+
+    trinamer.SetFileName( {"test","lepton"}  );
+    cout<<trinamer.GetFileName("pdf")<<endl;
+/*
     if(lepton == "sam7k9621"){
         dra::Readmgr cfg("/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw/settings/test.json");
         string path = cfg.GetSingleData<string>("path");
@@ -47,4 +56,5 @@ int main(int argc, char* argv[]){
         cout<<"wrong account"<<endl;
         cout<<a<<endl;
     }
+*/
 }

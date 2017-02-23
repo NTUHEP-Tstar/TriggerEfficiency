@@ -3,6 +3,7 @@
 
 #include "TriggerEfficiency/TriggerDraw/interface/Common.hpp"
 #include <boost/program_options.hpp>
+#include <initializer_list>
 
 namespace dra{
 
@@ -19,6 +20,13 @@ namespace dra{
             Parsermgr& AddOptions(const boost::program_options::options_description&);
             int ParseOptions(int argc, char* argv[]);
             bool CheckOption(const std::string&);
+           
+            string GetFileName(const std::string&);
+            string OptName(const std::string&);
+            
+
+            template <typename T>
+            void SetFileName(std::initializer_list<T>);
 
             template <typename T>
             T GetOption(const std::string&);
@@ -26,6 +34,7 @@ namespace dra{
         private:
             boost::program_options::variables_map vm;
             boost::program_options::options_description desc;
+            std::vector<std::string> namelist;
     };
 
 }

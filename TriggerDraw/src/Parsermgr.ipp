@@ -12,7 +12,12 @@ T dra::Parsermgr::GetOption(const string& op){
     return vm[op].as<T>();
 }
 
-
+template <typename T>
+void dra::Parsermgr::SetFileName(initializer_list<T> list){
+    for(auto name : list){
+        namelist.push_back(name);
+    }
+}
 
 
 

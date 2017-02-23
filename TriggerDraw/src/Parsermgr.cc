@@ -1,5 +1,6 @@
 #include "TriggerEfficiency/TriggerDraw/interface/Parsermgr.hpp"
 #include <boost/exception/diagnostic_information.hpp>
+#include <boost/lexical_cast.hpp>
 
 namespace opt = boost::program_options;
 using namespace std;
@@ -18,6 +19,7 @@ int dra::Parsermgr::ParseOptions(int argc, char* argv[]){
     } catch( boost::exception& e ){
         cerr << "Error parsing command!" << endl;
         cerr << boost::diagnostic_information( e );
+        cerr << desc <<endl;
         return FAIL_PARSER;
     }
 
@@ -34,5 +36,49 @@ int dra::Parsermgr::ParseOptions(int argc, char* argv[]){
 bool dra::Parsermgr::CheckOption(const string& option){
     return vm.count(option);    
 }
+
+
+string dra::Parsermgr::GetFileName(const string& type){
+    string ans = "";
+    for(auto& name : namelist){
+        ans += OptName(name);
+    }
+    return ans+"."+type;
+}
+
+string dra::Parsermgr::OptName(const string& opt){
+    string ans = "";
+    
+    if( ans == "" ){
+        try {
+            ans = GetOption<string>( opt );
+      } catch( ... ){
+      }
+    }
+
+    if( ans == "" ){
+        try {
+            ans = boost::lexical_cast<string>( GetOption<int>( opt ) );
+      } catch( ... ){
+      }
+    }
+
+    if( ans == "" ){
+        try {
+            ans = boost::lexical_cast<string>( GetOption<double>( opt ) );
+      } catch( ... ){
+      }
+    }
+
+    return ans;
+
+
+}
+
+
+
+
+
+
 
 
