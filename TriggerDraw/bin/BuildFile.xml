@@ -3,6 +3,4 @@
 <use name="boost_program_options"/>
 <use name="DataFormats/FWLite"/>
 
-
-<bin name="TriggerDraw"  file="TriggerDraw.cc"/>
 <bin name="hello"  file="test.cc"/>
