@@ -19,7 +19,6 @@ int main(int argc, char* argv[]){
     opt::options_description de( "Command for TriggerCompare" );
     de.add_options()
         ( "lepton,l", opt::value<string>()->required(), "Compare which lepton" )
-//        ( "run,r", opt::value<vector<string> >()->multitoken()->required(), "Which run" )
         ( "run,r", opt::value<string>()->required(), "Use which era of input" )
         ( "method,m", opt::value<string>()->required(), "Output file name" )
     ;
@@ -54,7 +53,7 @@ int main(int argc, char* argv[]){
     vector<string> pcut        = cfg.GetListData<string>("pcut");
     vector<string> ecut        = cfg.GetListData<string>("ecut");
 
-    
+/*    
     
     double ebin[] = {-2.5, -2.1, -2, -1.566, -1.444, -0.8 ,0, 0.8 ,1.444, 1.566, 2, 2.1, 2.5};
     double p27[] ={10,20,30,35,40,41,42,43,44,45,46,47,48,49,50,51,52,53,60,200};
@@ -64,14 +63,32 @@ int main(int argc, char* argv[]){
     
     double* pbin[] = {p27,p32};
     int     binnum[]={19,16};
-    
+*/    
     
     TFile f(trinamer.GetFileName("Analyz","root").c_str(),"RECREATE");
 
 
     for(int i=0; i<2; i++)
     {
-        
+
+        vector<double> _pbin;
+        vector<double> _ebin;
+
+
+        for(auto& cut : (cfg.GetSubTree(triggerlist[i])).get_child("pt")){
+            _pbin.push_back(cut.second.get_value<double>());
+        }
+        for(auto& cut : (cfg.GetSubTree(triggerlist[i])).get_child("eta")){
+            _ebin.push_back(cut.second.get_value<double>());
+        }
+
+        double* pbin = &_pbin[0];
+        double* ebin = &_ebin[0];
+        double  pbinnum = _pbin.size();
+        double  ebinnum = _ebin.size();
+
+        cout<<"pbinnum " <<pbinnum <<endl;
+        cout<<"ebinnum " <<ebinnum <<endl;
 
         TGraphAsymmErrors* mPtEff  = mtrigger[i].getPtEff();
         mPtEff->SetName( ("mPt"+triggername[i]).c_str());
@@ -129,9 +146,9 @@ int main(int argc, char* argv[]){
     
         pad22->cd();
 
-        TH1D* _ratio = new TH1D(("pt_"+triggerlist[i]).c_str(),"",binnum[i],pbin[i]);
+        TH1D* _ratio = new TH1D(("pt_"+triggerlist[i]).c_str(),"",pbinnum-1,pbin);
         
-        for(int j=1;j<binnum[i]+1;j++){
+        for(int j=1;j<pbinnum;j++){
             double deff = dPtEff->GetY()[j-1];
             double meff = mPtEff->GetY()[j-1];
             double derr = dPtEff->GetErrorY(j-1);
@@ -223,9 +240,9 @@ int main(int argc, char* argv[]){
 
         pad2->cd();
 
-        TH1D* ratio = new TH1D(("eta"+triggername[i]).c_str(),"",12,ebin);
+        TH1D* ratio = new TH1D(("eta"+triggername[i]).c_str(),"",ebinnum-1,ebin);
         
-        for(int j=1;j<13;j++){
+        for(int j=1;j<ebinnum;j++){
             double deff = dEtaEff->GetY()[j-1];
             double meff = mEtaEff->GetY()[j-1];
             double derr = dEtaEff->GetErrorY(j-1);

@@ -20,7 +20,6 @@ int main(){
 
     vector<double> temp;
 
-//    pt::ptree tr = cfg.GetSubTree("ele27");
     for(auto& cut : (cfg.GetSubTree("ele27")).get_child("pt")){
         temp.push_back(cut.second.get_value<double>());
     }
