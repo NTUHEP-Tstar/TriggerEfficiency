@@ -23,7 +23,7 @@ int main(int argc, char* argv[]){
         ( "method,m", opt::value<string>()->required(), "Output file name" )
     ;
 
-    dra::Parsermgr trinamer("/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw");
+    dra::Parsermgr trinamer("TriggerDraw");
     trinamer.AddOptions( de );
     const int run = trinamer.ParseOptions( argc, argv );
     if( run == dra::Parsermgr::HELP_PARSER  ){ return 0; }
@@ -158,7 +158,7 @@ int main(int argc, char* argv[]){
         lline1->SetLineStyle(8);
         lline1->Draw();
 
-        plt::SaveToPDF(c,"pt_"+trinamer.GetFileName(triggerlist[i],"pdf"));
+        plt::SaveToPDF(c,trinamer.GetFileName("pt_"+triggerlist[i],"pdf"));
 
 
 
@@ -243,7 +243,7 @@ int main(int argc, char* argv[]){
         line1->SetLineStyle(8);
         line1->Draw();
         
-        plt::SaveToPDF(c,"eta_"+trinamer.GetFileName(triggerlist[i],"pdf"));
+        plt::SaveToPDF(c,trinamer.GetFileName("eta_"+triggerlist[i],"pdf"));
 
         delete _ratio;
         delete ratio;

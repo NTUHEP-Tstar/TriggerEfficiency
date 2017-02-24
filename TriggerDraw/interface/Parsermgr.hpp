@@ -3,12 +3,13 @@
 
 #include "TriggerEfficiency/TriggerDraw/interface/Common.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/Readmgr.hpp"
+#include "TriggerEfficiency/TriggerDraw/interface/Pathmgr.hpp"
 #include <boost/program_options.hpp>
 #include <initializer_list>
 
 namespace dra{
 
-    class Parsermgr : public dra::Readmgr
+    class Parsermgr : public dra::Pathmgr, public dra::Readmgr
     {
 
         public:

@@ -6,8 +6,9 @@ namespace opt = boost::program_options;
 using namespace std;
 
 
-dra::Parsermgr::Parsermgr(const string& dir):
-    Readmgr(dir/"settings/eTrigger.json")
+dra::Parsermgr::Parsermgr(const string& subdir):
+    Pathmgr("TriggerEfficiency", subdir),
+    Readmgr( SettingsDir() / "eTrigger.json")
 {
     desc.add_options()
     ( "help,h", "print help options and exit program" )
@@ -52,7 +53,7 @@ string dra::Parsermgr::GetFileName(const string& prefix, const string& type){
     for(auto& name : namelist){
         ans += ( "_" + OptName(name) );
     }
-    return prefix+ans+"."+type;
+    return ResultsDir() / ( prefix+ans+"."+type );
 }
 
 string dra::Parsermgr::OptName(const string& opt){

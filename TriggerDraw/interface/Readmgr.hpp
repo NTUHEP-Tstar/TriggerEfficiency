@@ -14,7 +14,7 @@ namespace dra{
         public:
             Readmgr(const std::string&);
 
-            ~Readmgr(){}
+            virtual ~Readmgr(){}
         
             boost::property_tree::ptree GetSubTree(const std::string&);
 
