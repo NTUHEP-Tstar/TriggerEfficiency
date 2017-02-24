@@ -21,7 +21,7 @@ int main(int argc, char* argv[]){
     ( "test,t"  , opt::value<double>()->required(), "show the testing input")
     ;
 
-    dra::Parsermgr trinamer;
+    dra::Parsermgr trinamer("");
     trinamer.AddOptions( command_read_json ).AddOptions( command_test_input );
     const int run = trinamer.ParseOptions( argc, argv );
     if( run == dra::Parsermgr::HELP_PARSER  ){ return 0; }

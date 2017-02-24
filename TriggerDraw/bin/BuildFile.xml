@@ -8,5 +8,4 @@
 
 
 <bin name="hello"  file="test.cc"/>
-<bin name="readjsonfile"  file="read.cc"/>
 <bin name="TriCom"  file="TriggerCompare.cc"/>

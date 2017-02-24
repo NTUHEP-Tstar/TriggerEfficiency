@@ -8,7 +8,7 @@ Trigger::Trigger(const string& t, bool monte){
     if(monte){
         
         TFile* File = new TFile("/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerAnalyzer/data/MC_data/electron/electron_MC_analyz.root");
-        TDirectory* dir = gFile->GetDirectory("demo");
+        TDirectory* dir = File->GetDirectory("demo");
         
         dir->GetObject( ("pass_pt_"+t).c_str(),passPt);
         dir->GetObject( ("pass_eta_"+t).c_str(),passEta);
@@ -20,7 +20,7 @@ Trigger::Trigger(const string& t, bool monte){
     else{
             
         TFile* File = new TFile("/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerAnalyzer/data/electron/electron_anlyz.root");
-        TDirectory* dir = gFile->GetDirectory("demo");
+        TDirectory* dir = File->GetDirectory("demo");
         
         dir->GetObject( ("pass_pt_"+t).c_str(),passPt);
         dir->GetObject( ("pass_eta_"+t).c_str(),passEta);

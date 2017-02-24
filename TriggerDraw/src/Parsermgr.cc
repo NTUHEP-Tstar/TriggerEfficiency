@@ -6,7 +6,9 @@ namespace opt = boost::program_options;
 using namespace std;
 
 
-dra::Parsermgr::Parsermgr(){
+dra::Parsermgr::Parsermgr(const string& dir):
+    Readmgr(dir/"settings/eTrigger.json")
+{
     desc.add_options()
     ( "help,h", "print help options and exit program" )
   ;

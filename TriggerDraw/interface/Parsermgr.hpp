@@ -2,12 +2,14 @@
 #define PARSERMGR_HPP
 
 #include "TriggerEfficiency/TriggerDraw/interface/Common.hpp"
+#include "TriggerEfficiency/TriggerDraw/interface/Readmgr.hpp"
 #include <boost/program_options.hpp>
 #include <initializer_list>
 
 namespace dra{
 
-    class Parsermgr{
+    class Parsermgr : public dra::Readmgr
+    {
 
         public:
             enum PARSING_STATUS{
@@ -16,7 +18,7 @@ namespace dra{
                 PASS_PARSER
             };
             
-            Parsermgr();
+            Parsermgr(const std::string&);
             ~Parsermgr(){}
 
             Parsermgr& AddOptions(const boost::program_options::options_description&);

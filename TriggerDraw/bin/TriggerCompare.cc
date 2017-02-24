@@ -23,7 +23,7 @@ int main(int argc, char* argv[]){
         ( "method,m", opt::value<string>()->required(), "Output file name" )
     ;
 
-    dra::Parsermgr trinamer;
+    dra::Parsermgr trinamer("/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw");
     trinamer.AddOptions( de );
     const int run = trinamer.ParseOptions( argc, argv );
     if( run == dra::Parsermgr::HELP_PARSER  ){ return 0; }
@@ -36,34 +36,15 @@ int main(int argc, char* argv[]){
     dra::Trigger mtri32("ele32",true);
     dra::Trigger mtrigger[]={mtri27,mtri32};
 
-    cout<<"read monte"<<endl;
-
     dra::Trigger dtri27("ele27",false);
     dra::Trigger dtri32("ele32" ,false);
     dra::Trigger dtrigger[]={dtri27,dtri32};
 
-    cout<<"read data"<<endl;
 
-
-
-    dra::Readmgr cfg("/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw/settings/eTrigger.json");
-
-    vector<string> triggerlist = cfg.GetListData<string>("triggerlist");
-    vector<string> triggername = cfg.GetListData<string>("triggername");
-    vector<string> pcut        = cfg.GetListData<string>("pcut");
-    vector<string> ecut        = cfg.GetListData<string>("ecut");
-
-/*    
-    
-    double ebin[] = {-2.5, -2.1, -2, -1.566, -1.444, -0.8 ,0, 0.8 ,1.444, 1.566, 2, 2.1, 2.5};
-    double p27[] ={10,20,30,35,40,41,42,43,44,45,46,47,48,49,50,51,52,53,60,200};
-    double p32[] ={10,20,25,30,31,32,33,34,35,36,37,38,39,40,50,60,200};
-    
-    
-    
-    double* pbin[] = {p27,p32};
-    int     binnum[]={19,16};
-*/    
+    vector<string> triggerlist = trinamer.GetListData<string>("triggerlist");
+    vector<string> triggername = trinamer.GetListData<string>("triggername");
+    vector<string> pcut        = trinamer.GetListData<string>("pcut");
+    vector<string> ecut        = trinamer.GetListData<string>("ecut");
     
     TFile f(trinamer.GetFileName("Analyz","root").c_str(),"RECREATE");
 
@@ -74,21 +55,13 @@ int main(int argc, char* argv[]){
         vector<double> _pbin;
         vector<double> _ebin;
 
-
-        for(auto& cut : (cfg.GetSubTree(triggerlist[i])).get_child("pt")){
-            _pbin.push_back(cut.second.get_value<double>());
-        }
-        for(auto& cut : (cfg.GetSubTree(triggerlist[i])).get_child("eta")){
-            _ebin.push_back(cut.second.get_value<double>());
-        }
-
+        _pbin = dra::GetList<double>("pt" ,trinamer.GetSubTree(triggerlist[i]));
+        _ebin = dra::GetList<double>("eta",trinamer.GetSubTree(triggerlist[i]));
+        
         double* pbin = &_pbin[0];
         double* ebin = &_ebin[0];
         double  pbinnum = _pbin.size();
         double  ebinnum = _ebin.size();
-
-        cout<<"pbinnum " <<pbinnum <<endl;
-        cout<<"ebinnum " <<ebinnum <<endl;
 
         TGraphAsymmErrors* mPtEff  = mtrigger[i].getPtEff();
         mPtEff->SetName( ("mPt"+triggername[i]).c_str());
