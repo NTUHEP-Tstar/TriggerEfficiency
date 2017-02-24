@@ -16,7 +16,7 @@ namespace dra{
 
             ~Readmgr(){}
         
-            boost::property_tree::ptree GetRoot();
+            boost::property_tree::ptree GetSubTree(const std::string&);
 
             template<typename T>
             T GetSingleData(const std::string&);

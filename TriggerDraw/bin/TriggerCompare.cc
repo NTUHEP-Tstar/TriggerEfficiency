@@ -18,9 +18,10 @@ int main(int argc, char* argv[]){
 
     opt::options_description de( "Command for TriggerCompare" );
     de.add_options()
-        ( "lepton,l", opt::value<string>(), "Compare which lepton" )
-        ( "run,r", opt::value<vector<string> >()->multitoken(), "Which run" )
-        ( "method,m", opt::value<string>(), "Use which method" )
+        ( "lepton,l", opt::value<string>()->required(), "Compare which lepton" )
+//        ( "run,r", opt::value<vector<string> >()->multitoken()->required(), "Which run" )
+        ( "run,r", opt::value<string>()->required(), "Use which era of input" )
+        ( "method,m", opt::value<string>()->required(), "Output file name" )
     ;
 
     dra::Parsermgr trinamer;
@@ -28,7 +29,7 @@ int main(int argc, char* argv[]){
     const int run = trinamer.ParseOptions( argc, argv );
     if( run == dra::Parsermgr::HELP_PARSER  ){ return 0; }
     if( run == dra::Parsermgr::FAIL_PARSER ){ return 1; }
-    trinamer.SetFileName( {"lepton","method"}  );
+    trinamer.SetFileName( {"method","run"}  );
 
     /******************************************************************************************************/
 
@@ -44,9 +45,18 @@ int main(int argc, char* argv[]){
 
     cout<<"read data"<<endl;
 
+
+
+    dra::Readmgr cfg("/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw/settings/eTrigger.json");
+
+    vector<string> triggerlist = cfg.GetListData<string>("triggerlist");
+    vector<string> triggername = cfg.GetListData<string>("triggername");
+    vector<string> pcut        = cfg.GetListData<string>("pcut");
+    vector<string> ecut        = cfg.GetListData<string>("ecut");
+
+    
+    
     double ebin[] = {-2.5, -2.1, -2, -1.566, -1.444, -0.8 ,0, 0.8 ,1.444, 1.566, 2, 2.1, 2.5};
-    
-    
     double p27[] ={10,20,30,35,40,41,42,43,44,45,46,47,48,49,50,51,52,53,60,200};
     double p32[] ={10,20,25,30,31,32,33,34,35,36,37,38,39,40,50,60,200};
     
@@ -55,47 +65,22 @@ int main(int argc, char* argv[]){
     double* pbin[] = {p27,p32};
     int     binnum[]={19,16};
     
-   string name[]={
-       "scale_ele27",
-       "scale_ele32"
-   };
-
-
-    string tri[]={
-        "Ele45_WPLoose || Ele27_eta2p1_WPLoost",
-        "Ele32_eta2p1_WPTight",
-    };
     
-    
-    string desc[] ={"Ele45_WPLoose* || Ele27_eta2p1_WPLoost",
-                    "Ele32_eta2p1_WPTight"};
-    
-    string pcut[] ={"P_{T} > 48",
-                    "P_{T} > 35",
-    };
-
-    string ecut[] ={
-        "#eta < 2.1",
-        "#eta < 2.1"
-    };
-
-    TFile f("eCompare.root","RECREATE");
+    TFile f(trinamer.GetFileName("Analyz","root").c_str(),"RECREATE");
 
 
     for(int i=0; i<2; i++)
     {
-
-//        extern Color_t color[10];
-//        extern Style_t mstyle[10];
+        
 
         TGraphAsymmErrors* mPtEff  = mtrigger[i].getPtEff();
-        mPtEff->SetName( ("mPt"+tri[i]).c_str());
+        mPtEff->SetName( ("mPt"+triggername[i]).c_str());
         TGraphAsymmErrors* mEtaEff = mtrigger[i].getEtaEff();
-        mEtaEff->SetName( ("mEta"+tri[i]).c_str());
+        mEtaEff->SetName( ("mEta"+triggername[i]).c_str());
         TGraphAsymmErrors* dPtEff  = dtrigger[i].getPtEff();
-        dPtEff->SetName( ("dPt"+tri[i]).c_str());
+        dPtEff->SetName( ("dPt"+triggername[i]).c_str());
         TGraphAsymmErrors* dEtaEff = dtrigger[i].getEtaEff();
-        dEtaEff->SetName( ("dEta"+tri[i]).c_str());
+        dEtaEff->SetName( ("dEta"+triggername[i]).c_str());
 
         TCanvas* c = new TCanvas();
         TPad* pad11= plt::NewTopPad();
@@ -137,14 +122,14 @@ int main(int argc, char* argv[]){
         
         TLegend *lleg = plt::NewLegend(pleg_x_min,pleg_y_min,pleg_x_max,pleg_y_max);
         lleg->SetLineColor(kWhite);
-        lleg->AddEntry(("mPt"+tri[i]).c_str(),("MC   "+desc[i]+" ("+ecut[i]+")").c_str(),"lp");
-        lleg->AddEntry(("dPt"+tri[i]).c_str(),("Data "+desc[i]+" ("+ecut[i]+")").c_str(),"lp");
+        lleg->AddEntry(("mPt"+triggername[i]).c_str(),("MC   "+triggername[i]+" ("+ecut[i]+")").c_str(),"lp");
+        lleg->AddEntry(("dPt"+triggername[i]).c_str(),("Data "+triggername[i]+" ("+ecut[i]+")").c_str(),"lp");
         lleg->SetTextSize(14);
         lleg->Draw();
     
         pad22->cd();
 
-        TH1D* _ratio = new TH1D(("pt_"+name[i]).c_str(),"",binnum[i],pbin[i]);
+        TH1D* _ratio = new TH1D(("pt_"+triggerlist[i]).c_str(),"",binnum[i],pbin[i]);
         
         for(int j=1;j<binnum[i]+1;j++){
             double deff = dPtEff->GetY()[j-1];
@@ -183,7 +168,7 @@ int main(int argc, char* argv[]){
         lline1->SetLineStyle(8);
         lline1->Draw();
 
-        plt::SaveToPDF(c,Form("pteff%d.pdf",i));
+        plt::SaveToPDF(c,"pt_"+trinamer.GetFileName(triggerlist[i],"pdf"));
 
 
 
@@ -230,16 +215,15 @@ int main(int argc, char* argv[]){
         
         TLegend *leg = plt::NewLegend(eleg_x_min,eleg_y_min,eleg_x_max,eleg_y_max);
         leg->SetLineColor(kWhite);
-        leg->AddEntry(("mEta"+tri[i]).c_str(),("MC   "+desc[i]+" ("+pcut[i]+"GeV)").c_str(),"lp");
-        leg->AddEntry(("dEta"+tri[i]).c_str(),("Data "+desc[i]+" ("+pcut[i]+"GeV)").c_str(),"lp");
+        leg->AddEntry(("mEta"+triggername[i]).c_str(),("MC   "+triggername[i]+" ("+pcut[i]+"GeV)").c_str(),"lp");
+        leg->AddEntry(("dEta"+triggername[i]).c_str(),("Data "+triggername[i]+" ("+pcut[i]+"GeV)").c_str(),"lp");
         leg->SetTextSize(14);
         leg->Draw();
     
 
-
         pad2->cd();
 
-        TH1D* ratio = new TH1D(("eta"+name[i]).c_str(),"",12,ebin);
+        TH1D* ratio = new TH1D(("eta"+triggername[i]).c_str(),"",12,ebin);
         
         for(int j=1;j<13;j++){
             double deff = dEtaEff->GetY()[j-1];
@@ -268,8 +252,9 @@ int main(int argc, char* argv[]){
         line1->SetLineColor(kRed);
         line1->SetLineStyle(8);
         line1->Draw();
+        
+        plt::SaveToPDF(c,"eta_"+trinamer.GetFileName(triggerlist[i],"pdf"));
 
-        plt::SaveToPDF(c1,Form("etaeff%d.pdf",i));
         delete _ratio;
         delete ratio;
         delete c1;

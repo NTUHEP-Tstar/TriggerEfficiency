@@ -10,7 +10,7 @@ dra::Readmgr::Readmgr(const string& file){
 }
 
 pt::ptree
-dra::Readmgr::GetRoot(){
-    return root;
-}
+dra::Readmgr::GetSubTree(const string& t){
+    return root.get_child(t);
+} 
 

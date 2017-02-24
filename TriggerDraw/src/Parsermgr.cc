@@ -45,12 +45,12 @@ bool dra::Parsermgr::CheckOption(const string& option){
 }
 
 
-string dra::Parsermgr::GetFileName(const string& type){
-    string ans = "";
+string dra::Parsermgr::GetFileName(const string& prefix, const string& type){
+    string ans = ""; 
     for(auto& name : namelist){
-        ans += OptName(name);
+        ans += ( "_" + OptName(name) );
     }
-    return ans+"."+type;
+    return prefix+ans+"."+type;
 }
 
 string dra::Parsermgr::OptName(const string& opt){

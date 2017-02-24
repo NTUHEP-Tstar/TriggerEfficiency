@@ -1,0 +1,36 @@
+{
+        "path" : "/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerAnalyzer/data/MC_data/electron/electron_MC_analyz.root",
+        
+        "triggerlist" : ["ele27","ele32"],
+        
+        "triggername" : [
+            "Ele45_WPLoose || Ele27_eta2p1_WPLoost",
+            "Ele32_eta2p1_WPTight"
+        ],
+
+        "pcut" : ["P_{T} > 48","P_{T} > 35"],
+        "ecut" : ["#eta < 2.1","#eta < 2.1"],
+       
+        "test" : 
+        {
+            "rabbit" : "white",
+            "dog" : "brown",
+            "cat" : "grey"
+        },
+
+        "ele27" : 
+        {
+            "pt" : [10,20,30,35,40,41,42,43,44,45,46,47,48,49,50,51,52,53,60,200],
+            "eta": [-2.5, -2.1, -2, -1.566, -1.444, -0.8 ,0, 0.8 ,1.444, 1.566, 2,2.1, 2.5]
+        },
+
+        "ele32" : 
+        {
+            "pt" : [10,20,25,30,31,32,33,34,35,36,37,38,39,40,50,60,200],
+            "eta"  : [-2.5, -2.1, -2, -1.566, -1.444, -0.8 ,0, 0.8 ,1.444, 1.566, 2,2.1, 2.5]
+        }
+
+
+}
+        
+

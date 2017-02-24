@@ -40,7 +40,7 @@ int main(int argc, char* argv[]){
    
 
     trinamer.SetFileName( {"test","lepton"}  );
-    cout<<trinamer.GetFileName("pdf")<<endl;
+    cout<<trinamer.GetFileName("test","pdf")<<endl;
     
     /*
     if(lepton == "sam7k9621"){

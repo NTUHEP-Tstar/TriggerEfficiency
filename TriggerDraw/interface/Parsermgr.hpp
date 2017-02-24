@@ -23,7 +23,7 @@ namespace dra{
             int ParseOptions(int argc, char* argv[]);
             bool CheckOption(const std::string&);
            
-            string GetFileName(const std::string&);
+            string GetFileName(const std::string&, const std::string&);
             string OptName(const std::string&);
             
 
