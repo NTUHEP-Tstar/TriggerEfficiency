@@ -12,6 +12,8 @@ T dra::Parsermgr::GetOption(const string& op){
     return vm[op].as<T>();
 }
 
+
+//http://stackoverflow.com/questions/1657883/variable-number-of-arguments-in-c
 template <typename T>
 void dra::Parsermgr::SetFileName(initializer_list<T> list){
     for(auto name : list){

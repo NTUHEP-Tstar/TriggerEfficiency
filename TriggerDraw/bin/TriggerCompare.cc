@@ -18,6 +18,7 @@ int main(int argc, char* argv[]){
 
     opt::options_description de( "Command for TriggerCompare" );
     de.add_options()
+        //http://stackoverflow.com/questions/8175723/vector-arguments-in-boost-program-options
         ( "lepton,l", opt::value<string>()->required(), "Compare which lepton" )
         ( "run,r", opt::value<string>()->required(), "Use which era of input" )
         ( "method,m", opt::value<string>()->required(), "Output file name" )
@@ -55,6 +56,7 @@ int main(int argc, char* argv[]){
         vector<double> _pbin;
         vector<double> _ebin;
 
+        //http://einverne.github.io/post/2016/01/boost-learning-note-7.html
         _pbin = dra::GetList<double>("pt" ,trinamer.GetSubTree(triggerlist[i]));
         _ebin = dra::GetList<double>("eta",trinamer.GetSubTree(triggerlist[i]));
         
