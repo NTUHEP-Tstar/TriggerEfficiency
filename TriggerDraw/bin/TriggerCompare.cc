@@ -17,8 +17,9 @@ namespace opt = boost::program_options;
 int main(int argc, char* argv[]){
 
     opt::options_description de( "Command for TriggerCompare" );
+    
+    //http://stackoverflow.com/questions/8175723/vector-arguments-in-boost-program-options
     de.add_options()
-        //http://stackoverflow.com/questions/8175723/vector-arguments-in-boost-program-options
         ( "lepton,l", opt::value<string>()->required(), "Compare which lepton" )
         ( "run,r", opt::value<string>()->required(), "Use which era of input" )
         ( "method,m", opt::value<string>()->required(), "Output file name" )

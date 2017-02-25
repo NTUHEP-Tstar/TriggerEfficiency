@@ -30,12 +30,12 @@ int main(){
             "IsoMu22 || IsoTkMu22 (p_{T} > 22 GeV)"
             );
 */
-    
+/* 
     mgr.addtri(
             "ele27",
             "Ele45_WPLoose* || Ele27_eta2p1_WPLoost (| #eta | < 2.1)",
             "Ele45_WPLoose* || Ele27_eta2p1_WPLoost (p_{T} > 48 GeV)"
-            );
+            );*/
     mgr.addtri(
             "ele32",
             "Ele32_eta2p1_WPTight (| #eta | < 2.1)",
