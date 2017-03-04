@@ -15,8 +15,8 @@ extern void PlotSysError(const string& tri){
 
     SetGraphName(tri);
 
-//    PlotPt(tri);
-//    PlotEta(tri);
+    PlotPt(tri);
+    PlotEta(tri);
 
     Clean();
 }
@@ -38,6 +38,7 @@ extern void InitSysOri(const string& tri){
     trinamer.SetPtData(_pt);
     trinamer.SetEtaData(_eta);
 
+    file->Close();
 }
 
 extern void InitSysNew(const string& tri){
@@ -55,4 +56,5 @@ extern void InitSysNew(const string& tri){
     trinamer.SetPtMC(_pt);
     trinamer.SetEtaMC(_eta);
 
+    file->Close();
 }

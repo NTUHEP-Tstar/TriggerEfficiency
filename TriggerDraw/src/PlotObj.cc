@@ -38,6 +38,37 @@ extern void Clean(){
 
 }
 
+extern TH1D* SetComGraph(vector<double>& _bin, TGraph* dEff, TGraph* mEff){
+   
+    double* bin    = &_bin[0];
+    double  binnum = _bin.size();
+    
+
+    TH1D* ratio = new TH1D("ratio","",binnum-1,bin);
+            
+    for(int j=1;j<binnum;j++){
+        double deff = dEff->GetY()[j-1];
+        double meff = mEff->GetY()[j-1];
+        double derr = dEff->GetErrorY(j-1);
+        double merr = mEff->GetErrorY(j-1);
+        double seff;
+        double serr;
+
+        if(meff!=0){
+                seff= deff/meff;
+                serr = dra::ErrorProp(deff,derr,meff,merr);
+            }
+            else{
+                seff=0;
+                serr=0;
+            }
+        
+        ratio->SetBinContent(j,seff);
+        ratio->SetBinError(j,serr);    
+    }
+
+    return ratio;
+}
 
 extern void SetGraph(TGraph* mEff, TGraph* dEff){
 
