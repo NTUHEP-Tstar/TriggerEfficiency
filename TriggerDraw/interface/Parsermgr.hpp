@@ -9,7 +9,7 @@
 
 namespace dra{
 
-    class Parsermgr : public dra::Pathmgr, public dra::Readmgr
+    class Parsermgr 
     {
 
         public:
@@ -19,16 +19,17 @@ namespace dra{
                 PASS_PARSER
             };
             
-            Parsermgr(const std::string&);
+            Parsermgr();
             ~Parsermgr(){}
 
             Parsermgr& AddOptions(const boost::program_options::options_description&);
             int ParseOptions(int argc, char* argv[]);
             bool CheckOption(const std::string&);
            
-            string GetFileName(const std::string&, const std::string&);
             string OptName(const std::string&);
-            
+            std::vector<std::string> GetNamelist(){
+                return namelist;
+            }
 
             template <typename T>
             void SetFileName(std::initializer_list<T>);

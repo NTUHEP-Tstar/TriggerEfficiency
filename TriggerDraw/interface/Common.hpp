@@ -7,8 +7,6 @@
 #include <vector>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
-#include "TAttMarker.h"
-#include "Rtypes.h"
 
 /*******************************************************************************
 *   Operator overloading, defined in src/Common.cc
@@ -19,8 +17,6 @@ extern std::string operator/( const std::string&, const std::string& );
 /*******************************************************************************
 *   Global variable, defined in src/Common.cc
 *******************************************************************************/
-extern Color_t color[10];
-extern Style_t  mstyle[10];
 
 
 namespace dra{

@@ -3,6 +3,8 @@
 #include <iostream>
 #include "TriggerEfficiency/TriggerDraw/interface/Readmgr.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/Parsermgr.hpp"
+#include "TriggerEfficiency/TriggerDraw/interface/Triggermgr.hpp"
+
 using namespace std;
 namespace opt = boost::program_options;
 
@@ -21,7 +23,7 @@ int main(int argc, char* argv[]){
     ( "test,t"  , opt::value<double>()->required(), "show the testing input")
     ;
 
-    dra::Parsermgr trinamer("");
+    dra::Triggermgr trinamer("");
     trinamer.AddOptions( command_read_json ).AddOptions( command_test_input );
     const int run = trinamer.ParseOptions( argc, argv );
     if( run == dra::Parsermgr::HELP_PARSER  ){ return 0; }

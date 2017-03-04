@@ -6,9 +6,10 @@
 #include "ManagerUtils/PlotUtils/interface/Common.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/Readmgr.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/Parsermgr.hpp"
-#include "TriggerEfficiency/TriggerDraw/interface/Trigger.hpp"
+//#include "TriggerEfficiency/TriggerDraw/interface/Trigger.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/eConstant.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/Common.hpp"
+#include "TriggerEfficiency/TriggerDraw/interface/PlotObj.hpp"
 
 
 using namespace std;
@@ -25,15 +26,22 @@ int main(int argc, char* argv[]){
         ( "method,m", opt::value<string>()->required(), "Output file name" )
     ;
 
-    dra::Parsermgr trinamer("TriggerDraw");
     trinamer.AddOptions( de );
     const int run = trinamer.ParseOptions( argc, argv );
     if( run == dra::Parsermgr::HELP_PARSER  ){ return 0; }
     if( run == dra::Parsermgr::FAIL_PARSER ){ return 1; }
-    trinamer.SetFileName( {"method","run"}  );
+    trinamer.SetFileName( {"lepton","method","run"}  );
+
+
+
+    
+    for( auto& tri : trinamer.GetListData<string>("triggerlist")  ){
+        PlotCompare(tri);
+    }
+
 
     /******************************************************************************************************/
-
+/*
     dra::Trigger mtri27("ele27",true);
     dra::Trigger mtri32("ele32",true);
     dra::Trigger mtrigger[]={mtri27,mtri32};
@@ -163,11 +171,11 @@ int main(int argc, char* argv[]){
 
         plt::SaveToPDF(c,trinamer.GetFileName("pt_"+triggerlist[i],"pdf"));
 
-
+*/
 
 
         /********************************************************************************************/
-        
+/*        
         TCanvas* c1 = new TCanvas();
         TPad* pad1= plt::NewTopPad();
         TPad* pad2= plt::NewBottomPad();
@@ -258,5 +266,5 @@ int main(int argc, char* argv[]){
 
     f.Close();
 
-
+*/
 }

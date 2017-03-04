@@ -1,45 +1,49 @@
 #ifndef TRIGGERMGR_HPP
 #define TRIGGERMGR_HPP
 
-#include "TEfficiency.h"
-#include "TGraphAsymmErrors.h"
-#include "TH1.h"
-#include "TFile.h"
 #include <string>
 #include <vector>
+
+#include "TGraph.h"
 
 #include "TriggerEfficiency/TriggerDraw/interface/Common.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/Readmgr.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/Pathmgr.hpp"
+#include "TriggerEfficiency/TriggerDraw/interface/Parsermgr.hpp"
 
 namespace dra{
 
-    class Triggermgr : dra::Pathmgr, public dra::Readmgr
+    class Triggermgr : dra::Pathmgr, public dra::Readmgr, public dra::Parsermgr
     {
         public :
-            Triggermgr(const string&, const string&, const string&);
+            Triggermgr(const string&);
             ~Triggermgr();
 
-            TGraphAsymmErrors* getPtEff();
-            TGraphAsymmErrors* getEtaEff();
+            string GetFileName(const string&, const string&);
 
+            void SetPtData (TGraph* );
+            void SetEtaData(TGraph* );
+            void SetPtMC   (TGraph* );
+            void SetEtaMC  (TGraph* );
+
+            TGraph* GetDataPt();
+            TGraph* GetDataEta();
+            TGraph* GetMCPt();
+            TGraph* GetMCEta();
 
         private:
-            vector<string> triggerlist;
-            vector<string> triggername;
-            vector<string> pcut;
-            vector<string> ecut;
 
-            TH1D* passPt;
-            TH1D* passEta;
-            TH1D* totalPt;
-            TH1D* totalEta;
-            TGraphAsymmErrors* effPt;
-            TGraphAsymmErrors* effEta;
+            TGraph* datapt; 
+            TGraph* dataeta; 
+            TGraph* mcpt; 
+            TGraph* mceta; 
 
 
-            TFile* File;
+            
+
     };
+
+
 
 
 }
