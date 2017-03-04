@@ -39,4 +39,5 @@ int main(int argc, char* argv[]){
         PlotCompare(tri);
     }
 
+    PlotSysError("ele27");
 }
