@@ -6,7 +6,6 @@
 #include "ManagerUtils/PlotUtils/interface/Common.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/Readmgr.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/Parsermgr.hpp"
-//#include "TriggerEfficiency/TriggerDraw/interface/Trigger.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/eConstant.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/Common.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/PlotObj.hpp"
@@ -39,5 +38,5 @@ int main(int argc, char* argv[]){
         PlotCompare(tri);
     }
 
-    PlotSysError("ele27");
+//    PlotSysError("ele27");
 }

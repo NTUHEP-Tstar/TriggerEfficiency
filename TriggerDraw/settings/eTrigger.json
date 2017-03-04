@@ -3,7 +3,9 @@
         "datapath" : "/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerAnalyzer/data/electron/electron_anlyz.root",
         "mcpath" : "/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerAnalyzer/data/MC_data/electron/electron_MC_analyz.root",
        
-        "oripath" : "/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw/results/electron_CompareOriginal_all.root",
+        "oripath" : "/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw/results/electron_original_all.root",
+
+        "newpath" : "/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw/results/electron_new_all.root",
 
         "triggerlist" : ["ele27","ele32"],
 

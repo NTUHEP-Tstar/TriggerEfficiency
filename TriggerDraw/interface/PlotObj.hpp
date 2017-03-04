@@ -21,20 +21,15 @@ extern Style_t  mstyle[10];
 /*******************************************************************************
 *   Global function
 *******************************************************************************/
+/**********************
+*   CommonPlot        *
+**********************/
 extern void SaveToRoot(TH1*, const string&, const string&);
-
-extern void PlotCompare(const string&);
-extern void PlotPt(const string&);
-extern void PlotEta(const string&);
-extern void InitComData(const string&);
-extern void InitComMC(const string&);
 extern void Clean();
-
 extern void SetGraphName(const string&);
-extern void PlotCompare(const string&);
 extern void SetGraph(TGraph*, TGraph*);
+extern void SetHist(TH1*,const string&, const string&);
 extern TH1D* SetComGraph(vector<double>&, TGraph*, TGraph*);
-
 extern TLine* SetTLine(const double&,const double&,const double&,const double&);
 extern TPaveText* SetTPave(const double&,const double&,const double&,const double&);
 extern TLegend* SetTLeg(
@@ -48,6 +43,21 @@ extern TLegend* SetTLeg(
         );
 
 
+
+/**********************
+*   TriCompare        *
+**********************/
+extern void PlotCompare(const string&);
+extern void InitComData(const string&);
+extern void InitComMC(const string&);
+extern void PlotComparePt(const string&);
+extern void PlotCompareEta(const string&);
+extern void PlotCompare(const string&);
+
+
+/**********************
+*   TriSysError       *
+**********************/
 extern void PlotSysError(const string&);
 extern void InitSysOri(const string&);
 extern void InitSysNew(const string&);

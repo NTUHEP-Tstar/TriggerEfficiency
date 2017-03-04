@@ -15,8 +15,8 @@ extern void PlotSysError(const string& tri){
 
     SetGraphName(tri);
 
-    PlotPt(tri);
-    PlotEta(tri);
+ //   PlotPt(tri);
+//    PlotEta(tri);
 
     Clean();
 }
@@ -46,9 +46,9 @@ extern void InitSysNew(const string& tri){
     TFile* file = TFile::Open( ( trinamer.GetSingleData<string>("newpath") ).c_str() );
     
     TH1D* pt;
-    pt = (TH1D*) file->Get( ("pt_scale_"+tri).c_str() );
+    pt = (TH1D*) file->Get( ("pt_"+tri).c_str() );
     TH1D* eta;
-    eta = (TH1D*) file->Get( ("eta_scale_"+tri).c_str() );
+    eta = (TH1D*) file->Get( ("eta_"+tri).c_str() );
     
     TGraphErrors* _pt  = new TGraphErrors(pt);
     TGraphErrors* _eta = new TGraphErrors(eta);
