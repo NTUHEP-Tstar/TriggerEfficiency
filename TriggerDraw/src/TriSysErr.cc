@@ -9,7 +9,7 @@
 
 extern void PlotSysError(const string& tri){
     InitSysOri(tri);
-    InitSysNew(tri);
+//    InitSysNew(tri);
 
     SetGraphName(tri);
 
