@@ -30,7 +30,7 @@ extern void SetRunFile(){
     string run = trinamer.GetOption<string>("run");
     ofstream fout("temp.sh");
     string datacmd = "hadd " + trinamer.ResultsDir() / "data.root ";
-    string mccmd   = "hadd " + trinamer.ResultsDir() / "mc.root ";
+    string mccmd   = "hadd " + trinamer.ResultsDir() / "mc.root   ";
 
     fout << "#!/bin/bash" << endl;
     
@@ -44,8 +44,9 @@ extern void SetRunFile(){
         }
     }
 
-    fout<<(datacmd + datapath)<<endl;
-    fout<<(mccmd + mcpath) / "electron*"<<endl;
+    string dev = ">> /dev/null";
+    fout<<(datacmd + datapath + dev)<<endl;
+    fout<<(mccmd + mcpath ) / "electron*" + dev<<endl;
 
     fout.close();
 }

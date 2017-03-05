@@ -15,6 +15,7 @@
 extern dra::Triggermgr trinamer;
 extern TFile f;
 extern double lumi;
+extern string _text;
 
 extern Color_t  color[10];
 extern Style_t  mstyle[10];
@@ -25,7 +26,7 @@ extern Style_t  mstyle[10];
 /**********************
 *   CommonPlot        *
 **********************/
-
+extern string SetEra(string);
 extern void CalcLumi();
 extern void SaveToRoot(TH1*, const string&, const string&);
 extern void Clean();

@@ -1,8 +1,8 @@
 #include "TriggerEfficiency/TriggerDraw/interface/PlotObj.hpp"
 #include "ManagerUtils/PlotUtils/interface/Common.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/eConstant.hpp"
+#include <boost/algorithm/string.hpp>
 #include <iostream>
-#include <string>
 
 /*******************************************************************************
 *   Global variable
@@ -15,12 +15,13 @@ Style_t  mstyle[10] = {20,21,24,25,31,33,27,23,22,26};
 dra::Triggermgr trinamer("TriggerDraw");
 
 double lumi = 0;
-
+string _text = "Electron run ";
 /*******************************************************************************
 *   Global function
 *******************************************************************************/
 extern void CalcLumi(){
     string run = trinamer.GetOption<string>("run");
+   
     
     if(run == "all"){
         run = "bcdefgh";
@@ -29,12 +30,31 @@ extern void CalcLumi(){
     for(auto& r : run){
         string s="";
         s+=r;
-        cout<<s<<endl;
         lumi += dra::GetSingle<double>( s  ,trinamer.GetSubTree("lumi"));
     }
-    cout<<lumi<<endl;
+
+    _text += SetEra(run);
+    cout<<_text<<endl;
 }
 
+extern string SetEra( string run){
+    if(run == "all"){
+        return "B-H";
+    }
+
+    if(run.size() > 1){
+        boost::to_upper(run);
+        string temp = "";
+        temp += run[0];
+        temp += "-";
+        temp += run.back();
+        return  temp;
+    }
+    else{
+        boost::to_upper(run);
+        return run;
+    }
+}
 
 extern double GetYLimit(TGraph* h1,TGraph* h2){
 
@@ -146,7 +166,7 @@ extern TLine* SetTLine(const double& xmin, const double& ymin, const double& xma
 
 extern TPaveText* SetTPave(const double& xmin, const double& ymin, const double& xmax, const double& ymax){
     TPaveText *pt = plt::NewTextBox(xmin,ymin,xmax,ymax);
-    pt->AddText(_text);
+    pt->AddText(_text.c_str());
     pt->Draw();
     return pt;
 }

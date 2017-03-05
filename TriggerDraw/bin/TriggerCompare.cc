@@ -20,9 +20,9 @@ int main(int argc, char* argv[]){
     
     //http://stackoverflow.com/questions/8175723/vector-arguments-in-boost-program-options
     de.add_options()
-        ( "lepton,l", opt::value<string>()->required(), "Compare which lepton" )
-        ( "run,r", opt::value<string>()->required(), "Use which era of input" )
-        ( "method,m", opt::value<string>(), "Output file name" )
+        ( "lepton,l", opt::value<string>()->required(), "Which lepton " )
+        ( "run,r", opt::value<string>()->required(), "Which part of era " )
+        ( "method,m", opt::value<string>(), "Which systematic variable " )
     ;
 
     trinamer.AddOptions( de );
@@ -33,15 +33,12 @@ int main(int argc, char* argv[]){
 
     trinamer.AddFileName("method");
 
-
-
     MergeFile();
     CalcLumi(); 
 
-    
     for( auto& tri : trinamer.GetListData<string>("triggerlist")  ){
-        //PlotSysError(tri);
         PlotCompare(tri);
     }
+   
     CleanFile();
 }

@@ -2,7 +2,7 @@
 #define PLOT_ECONSTANTS_HPP
 #define _filename "/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerAnalyzer/data/electron/electron_anlyz.root" 
 #define dirname "demo"
-#define _text "Electron run B-H"
+//#define _text "Electron run B-H"
 #define etapdf "eff_eta_electron.pdf"
 //#define lumi  35685
 #define modif "change MC dataset"
