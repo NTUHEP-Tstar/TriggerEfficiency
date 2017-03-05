@@ -22,21 +22,26 @@ int main(int argc, char* argv[]){
     de.add_options()
         ( "lepton,l", opt::value<string>()->required(), "Compare which lepton" )
         ( "run,r", opt::value<string>()->required(), "Use which era of input" )
-        ( "method,m", opt::value<string>()->required(), "Output file name" )
+        ( "method,m", opt::value<string>(), "Output file name" )
     ;
 
     trinamer.AddOptions( de );
     const int run = trinamer.ParseOptions( argc, argv );
     if( run == dra::Parsermgr::HELP_PARSER  ){ return 0; }
     if( run == dra::Parsermgr::FAIL_PARSER ){ return 1; }
-    trinamer.SetFileName( {"lepton","method","run"}  );
+    trinamer.SetFileName( {"lepton","run"}  );
+
+    trinamer.AddFileName("method");
 
 
+
+    MergeFile();
+    CalcLumi(); 
 
     
     for( auto& tri : trinamer.GetListData<string>("triggerlist")  ){
-        PlotSysError(tri);
-        //PlotCompare(tri);
+        //PlotSysError(tri);
+        PlotCompare(tri);
     }
-
+    CleanFile();
 }

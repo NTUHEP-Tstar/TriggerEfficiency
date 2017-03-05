@@ -5,9 +5,77 @@
 #include "TFile.h"
 #include "TDirectory.h"
 #include "TCanvas.h"
+#include <iostream>
+#include <fstream>
 /*******************************************************************************
 *   Global function
 *******************************************************************************/
+extern void CleanFile(){
+    system( "rm temp.sh" );
+    system( ( "rm " + trinamer.ResultsDir() / "data.root" ).c_str() );
+    system( ( "rm " + trinamer.ResultsDir() / "mc.root"   ).c_str() );
+}
+extern void MergeFile(){
+    SetRunFile();
+    system( "chmod +x temp.sh" );
+    system( "./temp.sh" );
+}
+
+extern void SetRunFile(){
+    
+
+    string _datapath = SetDataPath();
+    string mcpath   = SetMCPath();
+
+    string run = trinamer.GetOption<string>("run");
+    ofstream fout("temp.sh");
+    string datacmd = "hadd " + trinamer.ResultsDir() / "data.root ";
+    string mccmd   = "hadd " + trinamer.ResultsDir() / "mc.root ";
+
+    fout << "#!/bin/bash" << endl;
+    
+    string datapath="";
+    if( run=="all"){
+        datapath += (_datapath / "electron_"+"* ");
+    }
+    else{
+        for(auto& r : run){
+            datapath += (_datapath / "electron_"+r+"* " );
+        }
+    }
+
+    fout<<(datacmd + datapath)<<endl;
+    fout<<(mccmd + mcpath) / "electron*"<<endl;
+
+    fout.close();
+}
+
+extern string SetMCPath(){
+
+    string package = "result_analyz";
+    if (trinamer.CheckOption("method")){
+
+        if(trinamer.GetOption<string>("method") == "changeMC")
+            package+=  "_"+trinamer.GetOption<string>("method");
+    
+    }
+
+    return ( trinamer.PackageDir() / "TriggerAnalyzer/data/MC_data/electron" / package );
+
+}
+
+extern string SetDataPath(){
+    
+    string package = "result_analyz";
+    if (trinamer.CheckOption("method")){
+
+        if(trinamer.GetOption<string>("method") != "changeMC")
+            package+=  "_"+trinamer.GetOption<string>("method");
+    
+    }
+    return ( trinamer.PackageDir() / "TriggerAnalyzer/data/electron" / package );
+    
+}
 
 extern void PlotCompare(const string& tri){
     InitComMC(tri);

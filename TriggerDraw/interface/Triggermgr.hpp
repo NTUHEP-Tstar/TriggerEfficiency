@@ -13,7 +13,7 @@
 
 namespace dra{
 
-    class Triggermgr : dra::Pathmgr, public dra::Readmgr, public dra::Parsermgr
+    class Triggermgr : public dra::Pathmgr, public dra::Readmgr, public dra::Parsermgr
     {
         public :
             Triggermgr(const string&);

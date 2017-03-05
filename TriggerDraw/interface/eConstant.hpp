@@ -4,7 +4,7 @@
 #define dirname "demo"
 #define _text "Electron run B-H"
 #define etapdf "eff_eta_electron.pdf"
-#define lumi  35685
+//#define lumi  35685
 #define modif "change MC dataset"
 /////////////////////////////////
 #define pline_x_min 0

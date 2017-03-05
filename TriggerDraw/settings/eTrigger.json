@@ -1,7 +1,18 @@
 {
         
-        "datapath" : "/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerAnalyzer/data/electron/electron_anlyz.root",
-        "mcpath" : "/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerAnalyzer/data/MC_data/electron/electron_MC_analyz.root",
+        "lumi" : 
+        {
+            "b" : 5800,
+            "c" : 2600,
+            "d" : 4200,
+            "e" : 4000,
+            "f" : 3100,
+            "g" : 7500,
+            "h" : 8400
+        },
+
+        "datapath" : "/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw/results/data.root",
+        "mcpath"   : "/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw/results/mc.root",
        
         "oripath" : "/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw/results/electron_original_all.root",
 

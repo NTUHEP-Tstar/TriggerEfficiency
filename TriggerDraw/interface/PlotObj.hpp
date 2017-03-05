@@ -14,6 +14,7 @@
 
 extern dra::Triggermgr trinamer;
 extern TFile f;
+extern double lumi;
 
 extern Color_t  color[10];
 extern Style_t  mstyle[10];
@@ -24,6 +25,8 @@ extern Style_t  mstyle[10];
 /**********************
 *   CommonPlot        *
 **********************/
+
+extern void CalcLumi();
 extern void SaveToRoot(TH1*, const string&, const string&);
 extern void Clean();
 extern void SetGraphName(const string&);
@@ -47,6 +50,11 @@ extern double GetYLimit(TGraph*,TGraph*);
 /**********************
 *   TriCompare        *
 **********************/
+extern void CleanFile();
+extern void MergeFile();
+extern string SetDataPath();
+extern string SetMCPath();
+extern void SetRunFile();
 extern void PlotCompare(const string&);
 extern void InitComData(const string&);
 extern void InitComMC(const string&);

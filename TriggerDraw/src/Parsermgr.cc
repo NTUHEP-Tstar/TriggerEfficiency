@@ -45,6 +45,11 @@ bool dra::Parsermgr::CheckOption(const string& option){
     return vm.count(option);    
 }
 
+void dra::Parsermgr::AddFileName(const string& opt){
+    if(CheckOption(opt)){
+        namelist.push_back(opt);
+    }
+}
 
 string dra::Parsermgr::OptName(const string& opt){
     string ans = "";

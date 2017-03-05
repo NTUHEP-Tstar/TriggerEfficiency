@@ -31,6 +31,8 @@ namespace dra{
                 return namelist;
             }
 
+            void AddFileName(const std::string&);
+
             template <typename T>
             void SetFileName(std::initializer_list<T>);
 

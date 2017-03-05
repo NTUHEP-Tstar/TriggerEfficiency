@@ -1,6 +1,8 @@
 #include "TriggerEfficiency/TriggerDraw/interface/PlotObj.hpp"
 #include "ManagerUtils/PlotUtils/interface/Common.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/eConstant.hpp"
+#include <iostream>
+#include <string>
 
 /*******************************************************************************
 *   Global variable
@@ -12,10 +14,27 @@ Style_t  mstyle[10] = {20,21,24,25,31,33,27,23,22,26};
 
 dra::Triggermgr trinamer("TriggerDraw");
 
+double lumi = 0;
 
 /*******************************************************************************
 *   Global function
 *******************************************************************************/
+extern void CalcLumi(){
+    string run = trinamer.GetOption<string>("run");
+    
+    if(run == "all"){
+        run = "bcdefgh";
+    }
+
+    for(auto& r : run){
+        string s="";
+        s+=r;
+        cout<<s<<endl;
+        lumi += dra::GetSingle<double>( s  ,trinamer.GetSubTree("lumi"));
+    }
+    cout<<lumi<<endl;
+}
+
 
 extern double GetYLimit(TGraph* h1,TGraph* h2){
 
