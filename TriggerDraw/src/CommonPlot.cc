@@ -17,6 +17,18 @@ dra::Triggermgr trinamer("TriggerDraw");
 *   Global function
 *******************************************************************************/
 
+extern double GetYLimit(TGraph* h1,TGraph* h2){
+
+    double ymax;
+    if(plt::GetYmax(h1) > plt::GetYmax(h2))
+        ymax = plt::GetYmax(h1);
+    else
+        ymax = plt::GetYmax(h2);
+
+    ymax *= 1.3;
+    return ymax;
+}
+
 extern void SaveToRoot(TH1* h, const string& fname, const string& objname){
     TFile f(fname.c_str(),"UPDATE");
     h->Write( objname.c_str(), TFile::kOverwrite  );
@@ -36,7 +48,7 @@ extern void Clean(){
 
 }
 
-extern TH1D* SetComGraph(vector<double>& _bin, TGraph* dEff, TGraph* mEff){
+extern TH1D* SetComGraph(vector<double>& _bin, TGraph* dEff, TGraph* mEff, const string& method){
    
     double* bin    = &_bin[0];
     double  binnum = _bin.size();
@@ -49,22 +61,27 @@ extern TH1D* SetComGraph(vector<double>& _bin, TGraph* dEff, TGraph* mEff){
         double meff = mEff->GetY()[j-1];
         double derr = dEff->GetErrorY(j-1);
         double merr = mEff->GetErrorY(j-1);
-        double seff;
-        double serr;
+        double seff=0;
+        double serr=0;
 
         if(meff!=0){
+        
+            if(method == "error")
+                seff= (meff-deff)/deff;
+            if(method == "compare")
                 seff= deff/meff;
-                serr = dra::ErrorProp(deff,derr,meff,merr);
-            }
-            else{
-                seff=0;
-                serr=0;
-            }
+            
+            serr = dra::ErrorProp(deff,derr,meff,merr);
+           
+        }
+            
         
         ratio->SetBinContent(j,seff);
         ratio->SetBinError(j,serr);    
+    
     }
 
+    
     ratio->SetMarkerStyle(21);
     ratio->SetStats(kFALSE);
     return ratio;
@@ -88,7 +105,7 @@ extern void SetHist(TH1* h, const string& x, const string& y){
     plt::SetAxis(h);
     h->GetXaxis()->SetTitle(x.c_str());
     h->GetYaxis()->SetTitle(y.c_str());
-    h->GetXaxis()->SetLabelSize(0 );
+    h->GetXaxis()->SetLabelSize(0);
 
 }
 

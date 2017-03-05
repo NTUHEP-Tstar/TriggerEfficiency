@@ -35,8 +35,8 @@ int main(int argc, char* argv[]){
 
     
     for( auto& tri : trinamer.GetListData<string>("triggerlist")  ){
-        PlotCompare(tri);
+        PlotSysError(tri);
+        //PlotCompare(tri);
     }
 
-//    PlotSysError("ele27");
 }

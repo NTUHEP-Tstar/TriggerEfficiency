@@ -113,7 +113,7 @@ extern void PlotCompareEta(const string& tri){
     SetHist(h33,"Eta","Data / MC");
     h33->GetYaxis()->SetLabelSize( 12 );
     h33->GetXaxis()->SetTitleOffset( 3 );
-    TH1D* ratio = SetComGraph(_ebin, trinamer.GetDataEta(), trinamer.GetMCEta());
+    TH1D* ratio = SetComGraph(_ebin, trinamer.GetDataEta(), trinamer.GetMCEta(),"compare");
     ratio->Draw("EP same");
 
     TLine* line1 = SetTLine(eline_x_min,eline_y_min,eline_x_max,eline_y_max);
@@ -174,7 +174,7 @@ extern void PlotComparePt(const string& tri){
     SetHist(h33,"Pt [GeV]","Data / MC");
     h33->GetYaxis()->SetLabelSize( 12 );
     h33->GetXaxis()->SetTitleOffset( 3 );
-    TH1D* ratio = SetComGraph(_pbin, trinamer.GetDataPt(), trinamer.GetMCPt());
+    TH1D* ratio = SetComGraph(_pbin, trinamer.GetDataPt(), trinamer.GetMCPt(),"compare");
     ratio->Draw("EP same");
 
     TLine* line1 = SetTLine(pline_x_min,pline_y_min,pline_x_max,pline_y_max);

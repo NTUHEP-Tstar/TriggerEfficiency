@@ -29,7 +29,7 @@ extern void Clean();
 extern void SetGraphName(const string&);
 extern void SetGraph(TGraph*, TGraph*);
 extern void SetHist(TH1*,const string&, const string&);
-extern TH1D* SetComGraph(vector<double>&, TGraph*, TGraph*);
+extern TH1D* SetComGraph(vector<double>&, TGraph*, TGraph*,const string&);
 extern TLine* SetTLine(const double&,const double&,const double&,const double&);
 extern TPaveText* SetTPave(const double&,const double&,const double&,const double&);
 extern TLegend* SetTLeg(
@@ -42,7 +42,7 @@ extern TLegend* SetTLeg(
         const double&
         );
 
-
+extern double GetYLimit(TGraph*,TGraph*);
 
 /**********************
 *   TriCompare        *
@@ -61,3 +61,5 @@ extern void PlotCompare(const string&);
 extern void PlotSysError(const string&);
 extern void InitSysOri(const string&);
 extern void InitSysNew(const string&);
+extern void PlotSysErrorPt(const string&);
+extern void PlotSysErrorEta(const string&);
