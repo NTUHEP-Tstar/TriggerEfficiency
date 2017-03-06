@@ -24,6 +24,7 @@ extern void MergeFile(){
 extern void SetRunFile(){
     
 
+    cout<<"start to merge"<<endl;
     string _datapath = SetDataPath();
     string mcpath   = SetMCPath();
 
@@ -43,6 +44,9 @@ extern void SetRunFile(){
             datapath += (_datapath / "electron_"+r+"* " );
         }
     }
+
+    cout<<"data path : "<<datapath<<endl;
+    cout<<"mc   path : "<<mcpath / "electron*"<<endl;
 
     string dev = ">> /dev/null";
     fout<<(datacmd + datapath + dev)<<endl;
@@ -79,6 +83,7 @@ extern string SetDataPath(){
 }
 
 extern void PlotCompare(const string& tri){
+
     InitComMC(tri);
     InitComData(tri);
     
@@ -170,7 +175,9 @@ extern void PlotCompareEta(const string& tri){
     ( trinamer.GetMCEta()   )->Draw("EP same");
 
     TLine* line = SetTLine(eline_x_min,eline_y_min,eline_x_max,eline_y_max);
-    TLegend* leg = SetTLeg(tri, triname, pcut,eleg_x_min,eleg_y_min,eleg_x_max,eleg_y_max);
+    TLegend* leg = SetTLeg(eleg_x_min,eleg_y_min,eleg_x_max,eleg_y_max);
+    leg->AddEntry( ("m"+tri).c_str(), ( "MC   "+triname+" ("+pcut+")" ).c_str(), "lp");
+    leg->AddEntry( ("d"+tri).c_str(), ( "Data "+triname+" ("+pcut+")" ).c_str(), "lp");
     TPaveText* pave = SetTPave(etext_x_min,etext_y_min,etext_x_max,etext_y_max);
     plt::DrawCMSLabel();
     plt::DrawLuminosity(lumi);
@@ -179,7 +186,7 @@ extern void PlotCompareEta(const string& tri){
     
     pad22->cd();
     TH1F* h33=gPad->DrawFrame(eframe_x_min,0.8,eframe_x_max,1.2,"");
-    SetHist(h33,"Eta","Data / MC");
+    SetHist(h33,"Eta","Data / MC",10);
     h33->GetYaxis()->SetLabelSize( 12 );
     h33->GetXaxis()->SetTitleOffset( 3 );
     TH1D* ratio = SetComGraph(_ebin, trinamer.GetDataEta(), trinamer.GetMCEta(),"compare");
@@ -188,7 +195,7 @@ extern void PlotCompareEta(const string& tri){
     TLine* line1 = SetTLine(eline_x_min,eline_y_min,eline_x_max,eline_y_max);
     
     /******************************************************************************************/
-    plt::SaveToPDF( c, trinamer.GetFileName( "eta_"+tri, "pdf" ) );
+    plt::SaveToPDF( c, trinamer.GetFileName( "eff_eta_"+tri, "pdf" ) );
     SaveToRoot(ratio, trinamer.GetFileName("","root")  , "eta_"+tri );
 
     delete pad11;
@@ -231,7 +238,9 @@ extern void PlotComparePt(const string& tri){
     ( trinamer.GetMCPt()   )->Draw("EP same");
 
     TLine* line = SetTLine(pline_x_min,pline_y_min,pline_x_max,pline_y_max);
-    TLegend* leg = SetTLeg(tri, triname, ecut,pleg_x_min,pleg_y_min,pleg_x_max,pleg_y_max);
+    TLegend* leg = SetTLeg(pleg_x_min,pleg_y_min,pleg_x_max,pleg_y_max);
+    leg->AddEntry( ("m"+tri).c_str(), ( "MC   "+triname+" ("+ecut+")" ).c_str(), "lp");
+    leg->AddEntry( ("d"+tri).c_str(), ( "Data "+triname+" ("+ecut+")" ).c_str(), "lp");
     TPaveText* pave = SetTPave(ptext_x_min,ptext_y_min,ptext_x_max,ptext_y_max);
     plt::DrawCMSLabel();
     plt::DrawLuminosity(lumi);
@@ -240,7 +249,7 @@ extern void PlotComparePt(const string& tri){
 
     pad22->cd();
     TH1F* h33=gPad->DrawFrame(pframe_x_min,0.8,pframe_x_max,1.2,"");
-    SetHist(h33,"Pt [GeV]","Data / MC");
+    SetHist(h33,"Pt [GeV]","Data / MC",10);
     h33->GetYaxis()->SetLabelSize( 12 );
     h33->GetXaxis()->SetTitleOffset( 3 );
     TH1D* ratio = SetComGraph(_pbin, trinamer.GetDataPt(), trinamer.GetMCPt(),"compare");
@@ -249,7 +258,7 @@ extern void PlotComparePt(const string& tri){
     TLine* line1 = SetTLine(pline_x_min,pline_y_min,pline_x_max,pline_y_max);
     
     /******************************************************************************************/
-    plt::SaveToPDF( c, trinamer.GetFileName( "pt_"+tri, "pdf" ) );
+    plt::SaveToPDF( c, trinamer.GetFileName( "eff_pt_"+tri, "pdf" ) );
     SaveToRoot(ratio, trinamer.GetFileName("","root")  , "pt_"+tri );
 
     delete pad11;

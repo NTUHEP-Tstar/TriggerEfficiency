@@ -32,14 +32,11 @@ extern void SaveToRoot(TH1*, const string&, const string&);
 extern void Clean();
 extern void SetGraphName(const string&);
 extern void SetGraph(TGraph*, TGraph*);
-extern void SetHist(TH1*,const string&, const string&);
+extern void SetHist(TH1*,const string&, const string&, const int& =0);
 extern TH1D* SetComGraph(vector<double>&, TGraph*, TGraph*,const string&);
 extern TLine* SetTLine(const double&,const double&,const double&,const double&);
 extern TPaveText* SetTPave(const double&,const double&,const double&,const double&);
 extern TLegend* SetTLeg(
-        const string&,
-        const string&,
-        const string&,
         const double&,
         const double&,
         const double&,
@@ -67,6 +64,7 @@ extern void PlotCompare(const string&);
 /**********************
 *   TriSysError       *
 **********************/
+extern void SetPath(string&,const string& ="");
 extern void PlotSysError(const string&);
 extern void InitSysOri(const string&);
 extern void InitSysNew(const string&);

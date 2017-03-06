@@ -34,7 +34,6 @@ extern void CalcLumi(){
     }
 
     _text += SetEra(run);
-    cout<<_text<<endl;
 }
 
 extern string SetEra( string run){
@@ -139,12 +138,12 @@ extern void SetGraph(TGraph* mEff, TGraph* dEff){
     dEff->SetMarkerSize(0.6);
 }
 
-extern void SetHist(TH1* h, const string& x, const string& y){
+extern void SetHist(TH1* h, const string& x, const string& y, const int& s){
     
     plt::SetAxis(h);
     h->GetXaxis()->SetTitle(x.c_str());
     h->GetYaxis()->SetTitle(y.c_str());
-    h->GetXaxis()->SetLabelSize(0);
+    h->GetXaxis()->SetLabelSize(s);
 
 }
 
@@ -171,12 +170,10 @@ extern TPaveText* SetTPave(const double& xmin, const double& ymin, const double&
     return pt;
 }
 
-extern TLegend* SetTLeg(const string& tri,const string& triname,const string& cut,const double& xmin,const double& ymin,const double& xmax,const double& ymax){
+extern TLegend* SetTLeg(const double& xmin,const double& ymin,const double& xmax,const double& ymax){
     
     TLegend* leg = plt::NewLegend(xmin,ymin,xmax,ymax);
     leg->SetLineColor(kWhite);
-    leg->AddEntry( ("m"+tri).c_str(), ( "MC   "+triname+" ("+cut+")" ).c_str(), "lp");
-    leg->AddEntry( ("d"+tri).c_str(), ( "Data "+triname+" ("+cut+")" ).c_str(), "lp");
     leg->SetTextSize(14);
     leg->Draw();
     return leg;

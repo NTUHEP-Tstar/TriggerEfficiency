@@ -11,20 +11,32 @@
 *******************************************************************************/
 
 extern void PlotSysError(const string& tri){
+
     InitSysOri(tri);
     InitSysNew(tri);
-
     SetGraphName(tri);
-
-//    PlotSysErrorPt(tri);
+    PlotSysErrorPt(tri);
     PlotSysErrorEta(tri);
 
     Clean();
 }
 
+extern void SetPath(string& p,const string& m){
+    string l = trinamer.GetOption<string>("lepton") ;
+    string r = trinamer.GetOption<string>("run");
+    if(m == "")
+        p = trinamer.ResultsDir() /  l + "_" + r + ".root";
+    else
+        p = trinamer.ResultsDir() /  l + "_" + r + "_" + m + ".root";
+    cout<<"Using file : "<<p<<endl;
+}
+
 extern void InitSysOri(const string& tri){
-    
-    TFile* file = TFile::Open( ( trinamer.GetSingleData<string>("oripath") ).c_str() );
+   
+    string path;
+
+    SetPath(path);
+    TFile* file = TFile::Open( path.c_str() );
     
     TH1D* pt;
     pt = (TH1D*) file->Get( ("pt_"+tri).c_str() );
@@ -43,7 +55,9 @@ extern void InitSysOri(const string& tri){
 
 extern void InitSysNew(const string& tri){
     
-    TFile* file = TFile::Open( ( trinamer.GetSingleData<string>("newpath") ).c_str() );
+    string path;
+    SetPath(path, trinamer.GetOption<string>("method"));
+    TFile* file = TFile::Open( path.c_str() );
     
     TH1D* pt;
     pt = (TH1D*) file->Get( ("pt_"+tri).c_str() );
@@ -72,16 +86,21 @@ extern void PlotSysErrorPt(const string& tri){
     TPad* pad22= plt::NewBottomPad();
     pad11->Draw();
     pad22->Draw();
+   
+    /******************************************************************************************/
     
     pad11->cd();
-    TH1F* h22=gPad->DrawFrame(pframe_x_min,pframe_y_min,pframe_x_max,pframe_y_max,"");
-    plt::SetAxis(h22);
+    TH1F* h22=gPad->DrawFrame(pframe_x_min,0.95,pframe_x_max,1.05,"");
     SetHist(h22,"","Scale Factor");
     ( trinamer.GetDataPt() )->Draw("EP same");
     ( trinamer.GetMCPt()   )->Draw("EP same");
 
-    TLegend* leg = SetTLeg(tri, triname, ecut,pleg_x_min,pleg_y_min,pleg_x_max,pleg_y_max);
-    TPaveText* pave = SetTPave(ptext_x_min,1.03,ptext_x_max,1.14);
+    string mod = trinamer.GetSingleData<string>( trinamer.GetOption<string>("method")  );
+    TLegend* leg = SetTLeg(0.4,0.1,0.5,0.3);
+    leg->AddEntry( ("d"+tri).c_str(), ( triname+" ("+ecut+")"               ).c_str(), "lp");
+    leg->AddEntry( ("m"+tri).c_str(), ( triname+" ("+ecut+")" + "(modified)").c_str(), "lp");
+    leg->AddEntry((TObject*)0, mod.c_str()  ,"");
+    TPaveText* pave = SetTPave(ptext_x_min,0.95+0.1*0.85,ptext_x_max,0.95+0.1*0.95);
     plt::DrawCMSLabel();
     plt::DrawLuminosity(lumi);
 
@@ -89,17 +108,17 @@ extern void PlotSysErrorPt(const string& tri){
 
     pad22->cd();
     TH1F* h33=gPad->DrawFrame(pframe_x_min,-0.02,pframe_x_max,0.02,"");
-    SetHist(h33,"Pt [GeV]","Systematic error");
+    SetHist(h33,"Pt [GeV]","Systematic error",10);
     h33->GetYaxis()->SetLabelSize( 12 );
     h33->GetXaxis()->SetTitleOffset( 3 );
-    TH1D* ratio = SetComGraph(_pbin, trinamer.GetDataPt(), trinamer.GetMCPt(),"compare");
+    TH1D* ratio = SetComGraph(_pbin, trinamer.GetDataPt(), trinamer.GetMCPt(),"error");
     ratio->Draw("EP same");
 
-    TLine* line1 = SetTLine(0,0,130,0);
+    TLine* line1 = SetTLine(0,0,220,0);
     
-    /******************************************************************************************/
-    plt::SaveToPDF( c, trinamer.GetFileName( "pt_"+tri, "pdf" ) );
+    plt::SaveToPDF( c, trinamer.GetFileName( "scale_pt_"+tri, "pdf" ) );
 
+    /******************************************************************************************/
     delete pad11;
     delete pad22;
     delete line1;
@@ -134,14 +153,18 @@ extern void PlotSysErrorEta(const string& tri){
     ( trinamer.GetDataEta() )->Draw("EP same");
     ( trinamer.GetMCEta()   )->Draw("EP same");
 
-    TLegend* leg = SetTLeg(tri, triname, pcut,eleg_x_min-0.04,eleg_y_min-0.03,eleg_x_max-0.04,eleg_y_max);
+    string mod = trinamer.GetSingleData<string>( trinamer.GetOption<string>("method")  );
+    TLegend* leg = SetTLeg(eleg_x_min-0.04,eleg_y_min-0.03,eleg_x_max-0.04,eleg_y_max);
+    leg->AddEntry( ("d"+tri).c_str(), ( triname+" ("+pcut+")"               ).c_str(), "lp");
+    leg->AddEntry( ("m"+tri).c_str(), ( triname+" ("+pcut+")" + "(modified)").c_str(), "lp");
+    leg->AddEntry((TObject*)0, mod.c_str()  ,"");
     TPaveText* pave = SetTPave(etext_x_min,ymax*0.85,etext_x_max,ymax*0.95);
     plt::DrawCMSLabel();
     plt::DrawLuminosity(lumi);
     /******************************************************************************************/
     pad22->cd();
     TH1F* h33=gPad->DrawFrame(eframe_x_min,-0.02,eframe_x_max,0.02,"");
-    SetHist(h33,"Eta","Systematic error");
+    SetHist(h33,"Eta","Systematic error",10);
     h33->GetYaxis()->SetLabelSize( 12 );
     h33->GetXaxis()->SetTitleOffset( 3 );
     TH1D* ratio = SetComGraph(_ebin, trinamer.GetDataEta(), trinamer.GetMCEta(),"error");
@@ -149,7 +172,8 @@ extern void PlotSysErrorEta(const string& tri){
 
     TLine* line1 = SetTLine(-3,0,3,0);
     
-    plt::SaveToPDF( c, trinamer.GetFileName( "eta_"+tri, "pdf" ) );
+    plt::SaveToPDF( c, trinamer.GetFileName( "scale_eta_"+tri, "pdf" ) );
+    /******************************************************************************************/
     delete pad11;
     delete pad22;
     delete line1;

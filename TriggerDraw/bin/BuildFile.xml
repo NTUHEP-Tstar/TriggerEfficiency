@@ -8,4 +8,5 @@
 
 
 <bin name="hello"  file="test.cc"/>
-<bin name="TriCom"  file="TriggerCompare.cc"/>
+<bin name="TriCompare"  file="TriggerCompare.cc"/>
+<bin name="TriSysError"  file="TriggerSysError.cc"/>

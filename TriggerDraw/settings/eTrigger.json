@@ -14,10 +14,6 @@
         "datapath" : "/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw/results/data.root",
         "mcpath"   : "/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw/results/mc.root",
        
-        "oripath" : "/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw/results/electron_original_all.root",
-
-        "newpath" : "/wk_cms/sam7k9621/CMSSW_8_0_10/src/TriggerEfficiency/TriggerDraw/results/electron_new_all.root",
-
         "triggerlist" : ["ele27","ele32"],
 
         "ele27" : 
@@ -36,7 +32,12 @@
             "ecut" : "#eta < 2.1",
             "pt" : [10,20,25,30,31,32,33,34,35,36,37,38,39,40,50,60,200],
             "eta"  : [-2.5, -2.1, -2, -1.566, -1.444, -0.8 ,0, 0.8 ,1.444, 1.566, 2,2.1, 2.5]
-        }
+        },
+
+        "ptcut"  : "shift tag pt cut up by 5GeV",
+        "zmass"  : "change Z mass window into 70-110 GeV",
+        "changeMC": "change MC dataset"
+
 
 
 }
