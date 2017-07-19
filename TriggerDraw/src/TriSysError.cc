@@ -116,6 +116,7 @@ extern void PlotSysErrorPt(const string& tri){
 
     TLine* line1 = SetTLine(0,0,220,0);
     
+    SaveToRoot(ratio, trinamer.GetFileName("scale","root"),"pt_"+tri);
     plt::SaveToPDF( c, trinamer.GetFileName( "scale_pt_"+tri, "pdf" ) );
 
     /******************************************************************************************/
@@ -171,7 +172,8 @@ extern void PlotSysErrorEta(const string& tri){
     ratio->Draw("EP same");
 
     TLine* line1 = SetTLine(-3,0,3,0);
-    
+   
+    SaveToRoot(ratio, trinamer.GetFileName("scale","root"),"eta_"+tri);
     plt::SaveToPDF( c, trinamer.GetFileName( "scale_eta_"+tri, "pdf" ) );
     /******************************************************************************************/
     delete pad11;

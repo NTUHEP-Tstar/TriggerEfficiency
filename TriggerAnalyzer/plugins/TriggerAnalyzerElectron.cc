@@ -14,6 +14,9 @@
 #include "TFile.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
+
+#include <iostream>
+
 using namespace std;
 
 
@@ -113,8 +116,10 @@ private:
     // ----------member data ---------------------------
 
     edm::Service<TFileService> fs;
-    TH1D* zmass1;
-    TH1D* zmass2;
+    /*TH1D* zmass1p;*/
+    //TH1D* zmass2p;
+    //TH1D* zmass1f;
+    /*TH1D* zmass2f;*/
 
     vector<Trig*> tri;
     vector<double> etabin;
@@ -134,8 +139,10 @@ TriggerAnalyzerElectron::TriggerAnalyzerElectron(const edm::ParameterSet& iConfi
     tag ( consumes<vector<pat::Electron>>  (iConfig.getParameter<edm::InputTag>("tag") ) )
 {
 
-    zmass1 = fs->make<TH1D>("ele27","ele27",100,50,130);
-    zmass2 = fs->make<TH1D>("ele32","ele32",100,50,130);
+    //zmass1p = fs->make<TH1D>("ele27_pass","ele27_pass",100,50,130);
+    //zmass1f = fs->make<TH1D>("ele27_fail","ele27_fail",100,50,130);*/
+    //zmass2p = fs->make<TH1D>("ele32_pass","ele32_pass",100,50,130);
+    //zmass2f = fs->make<TH1D>("ele32_fail","ele32_fail",100,50,130);
 
     for(int i=0; i<(int)vtri.size(); i++) {      //each pset has a corresponding Trig class
         vector<double> ptbin=vtri[i].getParameter<vector<double>>("ptbin");
@@ -170,9 +177,11 @@ TriggerAnalyzerElectron::analyze(const edm::Event& iEvent, const edm::EventSetup
 
 
 
+    cout<<"here"<<endl;
 
     for(unsigned i=0; i<vtri.size(); i++){
-        
+       
+
         //set tag cut
         vector<string> thltname = vtri[i].getParameter<vector<string>>("HLT");
         double ptcut = vtri[i].getParameter<double>("ptcut");
@@ -190,7 +199,7 @@ TriggerAnalyzerElectron::analyze(const edm::Event& iEvent, const edm::EventSetup
             TLorentzVector ele1(el1.px(),el1.py(),el1.pz(),el1.energy());
             TLorentzVector ele2(el2.px(),el2.py(),el2.pz(),el2.energy());
             double mass = (ele1+ele2).M();
-            if(mass<70 || mass>110)
+            if(mass<60 || mass>120)
                 break;
             
             //pass tag cut
@@ -203,8 +212,15 @@ TriggerAnalyzerElectron::analyze(const edm::Event& iEvent, const edm::EventSetup
             }
             
             //pass probe cut
-            if(!passtag)
+            if(!passtag){
+                /*if(i==0)*/
+                   //zmass1f->Fill(mass);
+                //else
+                    /*zmass2f->Fill(mass);*/
+              
                 continue;
+
+            }
 
             //filling in total
             
@@ -225,12 +241,12 @@ TriggerAnalyzerElectron::analyze(const edm::Event& iEvent, const edm::EventSetup
             }
 
            //store zmass 
-           if(fabs( el2.superCluster()->eta() ) < hlteta && el2.pt()>hltpt){
-               if(i==0)
-                   zmass1->Fill(mass);
-               else
-                   zmass2->Fill(mass);
-           }
+           /*if(fabs( el2.superCluster()->eta() ) < hlteta && el2.pt()>hltpt){*/
+               //if(i==0)
+                   //zmass1p->Fill(mass);
+               //else
+                   //zmass2p->Fill(mass);
+           /*}*/
         }
     }
 }

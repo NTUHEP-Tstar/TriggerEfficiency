@@ -36,8 +36,8 @@ private:
 
     bool zParent(pat::ElectronCollection& ) const;
     bool passKin(const pat::Electron& , bool  ) const;
-    double delR(const pat::Electron& ,const edm::TriggerNames&, const string );
-    void passTrigger(pat::Electron& ,const edm::TriggerNames &) ;
+    double delR(const pat::Electron& ,const edm::Event&, const string );
+    void passTrigger(pat::Electron& , const edm::Event&) ;
     bool passId(const edm::Ptr<pat::Electron>& ,const string ) const;
     bool passImpact(const pat::Electron& el)  const;
 
@@ -114,14 +114,14 @@ TriggerElectronTool::~TriggerElectronTool()
 }
 
 
-double TriggerElectronTool::delR(const pat::Electron& el ,const edm::TriggerNames &names, const string label)
+double TriggerElectronTool::delR(const pat::Electron& el ,const edm::Event& iEvent, const string label)
 {
 
     vector<double> dR;
 
     for (pat::TriggerObjectStandAlone obj : *triggerObjects)
     {
-        obj.unpackPathNames(names);
+        obj.unpackNamesAndLabels(iEvent, *triggerResults);
         if(obj.hasFilterLabel(label))
             dR.push_back( deltaR( el.superCluster()->eta(), el.phi(), obj.eta(), obj.phi() ) );
     }
@@ -138,7 +138,7 @@ double TriggerElectronTool::delR(const pat::Electron& el ,const edm::TriggerName
 }
 
 
-void TriggerElectronTool::passTrigger(pat::Electron& el,const edm::TriggerNames &names)
+void TriggerElectronTool::passTrigger(pat::Electron& el, const edm::Event& iEvent)
 {
 
     for(int i=0; i< (int)trigger.size(); i++)
@@ -146,7 +146,7 @@ void TriggerElectronTool::passTrigger(pat::Electron& el,const edm::TriggerNames 
         string name  = trigger[i].getParameter<string>("HLTName");
         string label = trigger[i].getParameter<string>("FilterName");
 
-        if( delR(el,names,label)<0.1)
+        if( delR(el,iEvent,label)<0.1)
         {
             el.addUserInt(name,1);
         }
@@ -320,17 +320,17 @@ bool TriggerElectronTool::filter(edm::Event& iEvent, const edm::EventSetup& iSet
     if (!(passprobekin && pid)) return false;
 
     //to mark the electron that pass the criteria
-    passTrigger(ele[first],names);
-    passTrigger(ele[second],names);
+    passTrigger(ele[first],iEvent);
+    passTrigger(ele[second],iEvent);
 
-    auto_ptr< vector< pat::Electron> > tagEleptr ( new vector< pat::Electron> );
-    auto_ptr< vector<pat::Electron> > probeEleptr ( new vector< pat::Electron> );
+    unique_ptr< vector< pat::Electron> > tagEleptr ( new vector< pat::Electron> );
+    unique_ptr< vector< pat::Electron> > probeEleptr ( new vector< pat::Electron> );
     tagEleptr  ->push_back(ele[first]);
     probeEleptr->push_back(ele[second]);
     
     //output.root label name
-    iEvent.put(tagEleptr, "Tag");
-    iEvent.put(probeEleptr , "Probe");
+    iEvent.put( move(tagEleptr)   , "Tag");
+    iEvent.put( move(probeEleptr) , "Probe");
     return true;
 
 }

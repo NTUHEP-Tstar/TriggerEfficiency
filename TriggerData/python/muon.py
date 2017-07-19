@@ -17,7 +17,7 @@ process.maxEvents = cms.untracked.PSet( input=cms.untracked.int32(-1))
 
 process.source = cms.Source(
         "PoolSource",
-        fileNames=cms.untracked.vstring('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_HCALDebug_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM'
+        fileNames=cms.untracked.vstring('file:/wk_cms2/yichen/public/MiniAOD/Run2017/Run2017A-PromptReco-v2.root'
             )
         )
 
@@ -39,48 +39,14 @@ process.muontool = cms.EDFilter(
         #trigger we used
         triggerCache = cms.VPSet(
             cms.PSet(
-                HLTName = cms.string("HLT_IsoMu22_v*"),
-                FilterName = cms.string("hltL3crIsoL1sMu20L1f0L2f10QL3f22QL3trkIsoFiltered0p09")
-            ),
-
-            cms.PSet(
-                HLTName = cms.string("HLT_IsoTkMu22_v*"),
-                FilterName = cms.string("hltL3fL1sMu20L1f0Tkf22QL3trkIsoFiltered0p09")
-            ),
-            cms.PSet(
-                HLTName = cms.string("HLT_IsoMu24_v*"),
-                FilterName = cms.string("hltL3crIsoL1sMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p09")
-            ),
-            cms.PSet(
-                HLTName = cms.string("HLT_IsoTkMu24_v*"),
-                FilterName = cms.string("hltL3fL1sMu22L1f0Tkf24QL3trkIsoFiltered0p09")
-            ),
-            cms.PSet(
-                HLTName = cms.string("HLT_IsoMu27_v*"),
-                FilterName = cms.string("hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p09")
-            ),
-            cms.PSet(
-                HLTName = cms.string("HLT_IsoTkMu27_v*"),
-                FilterName = cms.string("hltL3fL1sMu22Or25L1f0Tkf27QL3trkIsoFiltered0p09")
-            ),
-            cms.PSet(
-                HLTName = cms.string("HLT_Mu45_eta2p1_v*"),
-                FilterName = cms.string("hltL3fL1sMu22Or25L1f0L2f10QL3Filtered45e2p1Q")
-            ),
-            cms.PSet(
                 HLTName = cms.string("HLT_Mu50_v*"),
                 FilterName = cms.string("hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q")
-                ),
-            cms.PSet(
-                HLTName = cms.string("HLT_TkMu50_v*"),
-                FilterName = cms.string("hltL3fL1sMu25f0TkFiltered50Q")
-                )
-
+            )
         ),
         #trigger object
         vtxsrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
         HLTInputTag = cms.InputTag('TriggerResults','','HLT'),
-        HLTObjectsInputTag = cms.InputTag('selectedPatTrigger'),
+        HLTObjectsInputTag = cms.InputTag('slimmedPatTrigger'),
         #customized cut
         Zmassmin = cms.double(60),
         Zmassmax = cms.double(120),
@@ -99,7 +65,7 @@ process.filterpath = cms.Path(
 
 process.edmOut = cms.OutputModule(
         "PoolOutputModule",
-        fileName = cms.untracked.string("result/MCdata"),
+        fileName = cms.untracked.string("2017_Muon.root"),
 
         # datatype _ module(process.xxx) _ label(comes from .cc) _ process(cms.Process)
         outputCommands=cms.untracked.vstring(

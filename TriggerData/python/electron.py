@@ -17,7 +17,7 @@ process.maxEvents = cms.untracked.PSet( input=cms.untracked.int32(-1))
 
 process.source = cms.Source(
         "PoolSource",
-        fileNames=cms.untracked.vstring('/store/mc/RunIISummer16MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUMoriond17_HCALDebug_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/50000/00312D7A-FEBD-E611-A713-002590DB923E.root'
+        fileNames=cms.untracked.vstring('file:/wk_cms2/yichen/public/MiniAOD/Run2017/SingleElectron_Run2017A-PromptReco-v2.root'
             )
         )
 
@@ -46,24 +46,20 @@ process.electrontool = cms.EDFilter(
         #trigger object
         vtxsrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
         HLTInputTag = cms.InputTag('TriggerResults','','HLT'),
-        HLTObjectsInputTag = cms.InputTag('selectedPatTrigger'),
+        HLTObjectsInputTag = cms.InputTag('slimmedPatTrigger'),
         #trigger we used
         triggerCache = cms.VPSet(
             cms.PSet(
-                HLTName = cms.string("HLT_Ele32_eta2p1_WPTight_Gsf_v*"),
-                FilterName = cms.string("hltEle32WPTightGsfTrackIsoFilter")
+                HLTName = cms.string("HLT_Ele35_WPTight_Gsf_v*"),
+                FilterName = cms.string("hltEle35noerWPTightGsfTrackIsoFilter")
             ),
             cms.PSet(
-                HLTName = cms.string("HLT_Ele27_eta2p1_WPLoose_Gsf_v*"),
-                FilterName = cms.string("hltEle27erWPLooseGsfTrackIsoFilter")
+                HLTName = cms.string("HLT_Ele38_WPTight_Gsf_v*"),
+                FilterName = cms.string("hltEle38noerWPTightGsfTrackIsoFilter")
             ),
             cms.PSet(
-                HLTName = cms.string("HLT_Ele45_WPLoose_Gsf_v*"),
-                FilterName = cms.string("hltEle45WPLooseGsfTrackIsoFilter")
-            ),
-            cms.PSet(
-                HLTName = cms.string("HLT_Ele27_WPTight_Gsf_v*"),
-                FilterName = cms.string("hltEle27WPTightGsfTrackIsoFilter")
+                HLTName = cms.string("HLT_Ele40_WPTight_Gsf_v*"),
+                FilterName = cms.string("hltEle40noerWPTightGsfTrackIsoFilter")
             )
         ),
        #tag criteria
@@ -99,7 +95,7 @@ process.filterpath = cms.Path(
 
 process.edmOut = cms.OutputModule(
         "PoolOutputModule",
-        fileName = cms.untracked.string("result/MCdata/electron_MC.root"),
+        fileName = cms.untracked.string("2017_electron.root"),
 
         # datatype _ module(process.xxx) _ label(comes from .cc) _ process(cms.Process)
         outputCommands=cms.untracked.vstring(

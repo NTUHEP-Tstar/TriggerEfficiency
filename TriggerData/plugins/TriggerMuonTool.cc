@@ -39,8 +39,8 @@ private:
     bool passPFIso(const pat::Muon& ,const double ) const;
     bool passId(const pat::Muon& ,const string ) ;
     bool passKin(const pat::Muon& ,const bool  ) const;
-    double delR(const pat::Muon& ,const edm::TriggerNames&, const string);
-    void passTrigger(pat::Muon& ,const edm::TriggerNames &);
+    double delR(const pat::Muon& ,const edm::Event&, const string);
+    void passTrigger(pat::Muon& ,const edm::Event&);
     
     const edm::EDGetToken muonsrc;
     edm::Handle<vector<pat::Muon> > muonhandle;
@@ -109,12 +109,12 @@ TriggerMuonTool::~TriggerMuonTool()
 }
 
 
-double TriggerMuonTool::delR(const pat::Muon& mu,const edm::TriggerNames& names ,const string label) 
+double TriggerMuonTool::delR(const pat::Muon& mu,const edm::Event& iEvent ,const string label) 
 {
     vector<double> dR;
     for (pat::TriggerObjectStandAlone obj : *triggerObjects)
     {
-        obj.unpackPathNames(names);
+        obj.unpackNamesAndLabels(iEvent, *triggerResults);
         if(obj.hasFilterLabel(label))
             dR.push_back( deltaR( mu.eta(), mu.phi(), obj.eta(), obj.phi() ) );
     }
@@ -130,13 +130,13 @@ double TriggerMuonTool::delR(const pat::Muon& mu,const edm::TriggerNames& names 
 }
 
 
-void TriggerMuonTool::passTrigger(pat::Muon& mu,const edm::TriggerNames &names)
+void TriggerMuonTool::passTrigger(pat::Muon& mu,const edm::Event& iEvent)
 {
     for(int i=0; i< (int)(trigger.size()); i++){
         string name =trigger[i].getParameter<string>("HLTName");
         string label=trigger[i].getParameter<string>("FilterName");
     
-        if ( delR(mu,names,label)<0.1 )
+        if ( delR(mu,iEvent,label)<0.1 )
         {
             mu.addUserInt(name,1);
         }
@@ -283,17 +283,17 @@ TriggerMuonTool::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
     if(!(passprobeid && probepfiso && passprobekin && probetkiso)) return false;
 
     //mark the passing particle
-    passTrigger(muons[first],names);
-    passTrigger(muons[second],names);
+    passTrigger(muons[first],iEvent);
+    passTrigger(muons[second],iEvent);
 
-    auto_ptr< vector<pat::Muon> > tagMuonptr ( new vector< pat::Muon> );
-    auto_ptr< vector<pat::Muon> > probeMuonptr ( new vector< pat::Muon> );
-    tagMuonptr->push_back(muons[first]);
+    unique_ptr< vector<pat::Muon> > tagMuonptr ( new vector< pat::Muon> );
+    unique_ptr< vector<pat::Muon> > probeMuonptr ( new vector< pat::Muon> );
+    tagMuonptr  ->push_back(muons[first]);
     probeMuonptr->push_back(muons[second]);
 
 
-    iEvent.put(tagMuonptr, "Tag");
-    iEvent.put(probeMuonptr,"Probe");
+    iEvent.put( move(tagMuonptr)    ,"Tag");
+    iEvent.put( move(probeMuonptr) ,"Probe");
     return true;
 
 

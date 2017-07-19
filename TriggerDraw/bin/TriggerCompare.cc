@@ -2,7 +2,6 @@
 #include <vector>
 #include <math.h>
 
-
 #include "ManagerUtils/PlotUtils/interface/Common.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/Readmgr.hpp"
 #include "TriggerEfficiency/TriggerDraw/interface/Parsermgr.hpp"

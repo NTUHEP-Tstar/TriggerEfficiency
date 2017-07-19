@@ -9,4 +9,5 @@
 <bin name="mSysErr" file="mSysError.cc"/>
 <bin name="eSysErr" file="eSysError.cc"/>
 <bin name="zMass" file="zMass.cc"/>
+<bin name="drawmass" file="ZM.cc"/>
 

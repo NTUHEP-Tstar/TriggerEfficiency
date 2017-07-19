@@ -1,4 +1,5 @@
 #include "TriggerEfficiency/TriggerDraw/interface/Parsermgr.hpp"
+#include <iostream>
 #include <boost/exception/diagnostic_information.hpp>
 #include <boost/lexical_cast.hpp>
 

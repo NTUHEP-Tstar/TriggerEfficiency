@@ -8,7 +8,7 @@
 #include "TriggerEfficiency/TriggerPlot/interface/eConstant.h"
 #include "TriggerEfficiency/TriggerPlot/interface/Trigger.h"
 hist::hist(string str){
-	f = new TFile(filename);
+	f = new TFile(_filename);
 
     TDirectory* dir1 = gFile->GetDirectory(dirname);
 	p+=str;
